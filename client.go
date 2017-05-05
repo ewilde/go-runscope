@@ -97,9 +97,9 @@ func (client *Client) createResource(
 	}
 }
 
-func (client *Client) readResource(resource interface{}, resourceType string, resourceName string, endpoint string) (interface{}, error) {
+func (client *Client) readResource(resourceType string, resourceName string, endpoint string) (*response, error) {
 	log.Printf("[DEBUG] reading %s %s", resourceType, resourceName)
-	response := response{}
+	response := new(response)
 
 	req, err := client.newRequest("GET", endpoint, nil)
 	if err != nil {
@@ -114,7 +114,7 @@ func (client *Client) readResource(resource interface{}, resourceType string, re
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
-	log.Printf("[DEBUG] %d %s", resp.StatusCode, bodyString)
+	log.Printf("[DEBUG] 	%d %s", resp.StatusCode, bodyString)
 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
