@@ -3,7 +3,6 @@ package runscope
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mitchellh/mapstructure"
 	"io/ioutil"
 	"log"
 	"net/url"
@@ -72,16 +71,6 @@ func (client *Client) DeleteBucket(key string) error {
 
 func getBucketFromResponse(response interface{}) (*Bucket, error) {
 	bucket := new(Bucket)
-	config := &mapstructure.DecoderConfig{
-		Metadata: nil,
-		Result:   bucket,
-		TagName:  "json",
-	}
-	decoder, err := mapstructure.NewDecoder(config)
-	if err != nil {
-		panic(err)
-	}
-
-	err = decoder.Decode(response)
+	err := Decode(bucket, response)
 	return bucket, err
 }

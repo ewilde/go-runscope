@@ -2,16 +2,16 @@ package runscope
 
 import (
 	"fmt"
- 	"github.com/mitchellh/mapstructure"
-
+	"time"
 
 )
 
 type Test struct {
-	Id            string  `json:"id,omitempty"`
-	Bucket        *Bucket `json:"-"`
-	Name          string  `json:"name"`
-	Description   string  `json:"description"`
+	Id            string    `json:"id,omitempty"`
+	Bucket        *Bucket   `json:"-"`
+	Name          string    `json:"name"`
+	Description   string    `json:"description"`
+	CreatedAt     time.Time `json:"created_at"`
 }
 
 func (client *Client) CreateTest(test Test) (Test, error) {
@@ -45,16 +45,6 @@ func (client *Client) DeleteTest(test Test) error {
 
 func getTestFromResponse(response interface{}) (*Test, error) {
 	test := new(Test)
-	config := &mapstructure.DecoderConfig{
-		Metadata: nil,
-		Result:   test,
-		TagName:  "json",
-	}
-	decoder, err := mapstructure.NewDecoder(config)
-	if err != nil {
-		panic(err)
-	}
-
-	err = decoder.Decode(response)
+	err := Decode(test, response)
 	return test, err
 }

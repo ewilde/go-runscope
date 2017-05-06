@@ -3,6 +3,7 @@ package runscope
 import (
 	"testing"
 	"encoding/json"
+	"time"
 )
 
 func TestCreateTest(t *testing.T) {
@@ -156,5 +157,11 @@ func TestReadFromResponse(t *testing.T) {
 
 	if test.Name != "Sample Name" {
 		t.Errorf("Expected name %s, actual %s", "Sample Name", test.Name)
+	}
+
+	expectedTime := time.Time{}
+	expectedTime = time.Unix(int64(1494023235), 0)
+	if !test.CreatedAt.Equal(expectedTime) {
+		t.Errorf("Expected time %s, actual %s",  expectedTime.String(), test.CreatedAt)
 	}
 }
