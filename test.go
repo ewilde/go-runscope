@@ -7,39 +7,63 @@ import (
 )
 
 type Test struct {
-	Id            string    `json:"id,omitempty"`
-	Bucket        *Bucket   `json:"-"`
-	Name          string    `json:"name"`
-	Description   string    `json:"description"`
-	CreatedAt     time.Time `json:"created_at"`
+	Id                 string    `json:"id,omitempty"`
+	Bucket             *Bucket   `json:"-"`
+	Name               string    `json:"name"`
+	Description        string    `json:"description"`
+	CreatedAt          time.Time `json:"created_at"`
+	CreatedBy          Contact   `json:"created_by"`
+	DefaultEnvironment string    `json:"default_environment_id"`
+	ExportedAt         time.Time `json:"exported_at"`
 }
 
-func (client *Client) CreateTest(test Test) (Test, error) {
-	id, error := client.createResource(test, "test", test.Name, "id",
+type Contact struct {
+	Email         string     `json:"email"`
+        Id            string     `json:"id"`
+        Name          string     `json:"name"`
+}
+
+func NewTest() *Test {
+	return &Test { Bucket: &Bucket{}}
+}
+
+func (client *Client) CreateTest(test *Test) (*Test, error) {
+	newResource, error := client.createResource(test, "test", test.Name,
 		fmt.Sprintf("/buckets/%s/tests", test.Bucket.Key))
 	if error != nil {
-		return test, error
+		return nil, error
 	}
 
-	test.Id = id
-	return test, nil
+	newTest, error := getTestFromResponse(newResource.Data)
+	if error != nil {
+		return nil, error
+	}
+
+	newTest.Bucket = test.Bucket
+	return newTest, nil
 }
 
-func (client *Client) ReadTest(test Test) (*Test, error) {
+func (client *Client) ReadTest(test *Test) (*Test, error) {
 	resource, error := client.readResource("test", test.Id, fmt.Sprintf("/buckets/%s/tests/%s", test.Bucket.Key, test.Id))
 	if error != nil {
 		return nil, error
 	}
 
-	return getTestFromResponse(resource.Data)
+	readTest, error := getTestFromResponse(resource.Data)
+	if error != nil {
+		return nil, error
+	}
+
+	readTest.Bucket = test.Bucket
+	return readTest, nil
 }
 
-func (client *Client) UpdateTest(test Test) (response, error) {
+func (client *Client) UpdateTest(test *Test) (response, error) {
 	resource, error := client.updateResource(test, "test", test.Id, fmt.Sprintf("/buckets/%s/tests/%s", test.Bucket.Key, test.Id))
 	return resource.(response), error
 }
 
-func (client *Client) DeleteTest(test Test) error {
+func (client *Client) DeleteTest(test *Test) error {
 	return client.deleteResource("test", test.Id, fmt.Sprintf("/buckets/%s/tests/%s", test.Bucket.Key, test.Id))
 }
 

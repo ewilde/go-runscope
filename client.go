@@ -57,24 +57,24 @@ func NewClient(apiUrl string, accessToken string) *Client {
 }
 
 func (client *Client) createResource(
-	resource interface{}, resourceType string, resourceName string, resourceIdFieldName string, endpoint string) (string, error) {
+	resource interface{}, resourceType string, resourceName string, endpoint string) (*response, error) {
 	log.Printf("[DEBUG] creating %s %s", resourceType, resourceName)
 
 	bytes, err := json.Marshal(resource)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	log.Printf("[DEBUG] 	request: POST %s %s", endpoint, string(bytes))
 
 	req, err := client.newRequest("POST", endpoint, bytes)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	resp, err := client.Http.Do(req)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer resp.Body.Close()
 
@@ -85,15 +85,15 @@ func (client *Client) createResource(
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
 		if err = json.Unmarshal(bodyBytes, &errorResp); err != nil {
-			return "", fmt.Errorf("Error creating %s: %s", resourceType, resourceName)
+			return nil, fmt.Errorf("Error creating %s: %s", resourceType, resourceName)
 		} else {
-			return "", fmt.Errorf("Error creating %s: %s, status: %d reason: %q", resourceType,
+			return nil, fmt.Errorf("Error creating %s: %s, status: %d reason: %q", resourceType,
 				resourceName, errorResp.Status, errorResp.ErrorMessage)
 		}
 	} else {
 		response := new(response)
 		json.Unmarshal(bodyBytes, &response)
-		return response.Data[resourceIdFieldName].(string), nil
+		return response, nil
 	}
 }
 
