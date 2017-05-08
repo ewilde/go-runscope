@@ -72,7 +72,7 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 	}
 
 	if !environment.PreserveCookies {
-		t.Errorf("Expected PreserveCookies %s, actual %s", true, environment.PreserveCookies)
+		t.Errorf("Expected PreserveCookies %t, actual %t", true, environment.PreserveCookies)
 	}
 
 	if environment.TestId != "a10c97e6-2024-41ca-990d-5e0b5f751734" {
@@ -80,7 +80,7 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 	}
 
 	if len (environment.InitialVariables) != 2 {
-		t.Errorf("Expected %s initial variables, actual %s", "2", len(environment.InitialVariables))
+		t.Errorf("Expected %d initial variables, actual %d", 2, len(environment.InitialVariables))
 	}
 
 	if environment.InitialVariables["NameB"] != "ValueB" {
@@ -88,7 +88,7 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 	}
 
 	if len (environment.Integrations) != 2 {
-		t.Errorf("Expected %s integrations, actual %s", "2", len(environment.Integrations))
+		t.Errorf("Expected %d integrations, actual %d", 2, len(environment.Integrations))
 	}
 
 	if environment.Integrations[1].Id != "1b766ead-b3d1-456f-a350-83845a428ed1" ||
@@ -102,11 +102,11 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 	}
 
 	if len (environment.Regions) != 2 {
-		t.Errorf("Expected %s regions, actual %s", "2", len(environment.Regions))
+		t.Errorf("Expected %d regions, actual %d", 2, len(environment.Regions))
 	}
 
 	if !environment.VerifySsl {
-		t.Errorf("Expected verify ssl %s, actual %s", true, environment.VerifySsl)
+		t.Errorf("Expected verify ssl %t, actual %t", true, environment.VerifySsl)
 	}
 
 	expectedTime := time.Time{}
@@ -116,7 +116,7 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 	}
 
 	if !environment.RetryOnFailure {
-		t.Errorf("Expected retry on failures %s, actual %s", true, environment.RetryOnFailure)
+		t.Errorf("Expected retry on failures %t, actual %t", true, environment.RetryOnFailure)
 	}
 
 	if len (environment.RemoteAgents) != 1 ||
