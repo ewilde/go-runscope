@@ -61,6 +61,10 @@ func (client *Client) CreateBucket(bucket Bucket) (*Bucket, error) {
 
 func (client *Client) ReadBucket(key string) (*Bucket, error) {
 	resource, error := client.readResource("bucket", key, fmt.Sprintf("/buckets/%s", key))
+	if error {
+		return nil, error
+	}
+
 	bucket, error := getBucketFromResponse(resource.Data)
 	return bucket, error
 }
