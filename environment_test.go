@@ -51,6 +51,56 @@ func TestCreateEnvironment(t *testing.T) {
 	}
 }
 
+func TestCreateTestEnvironment(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: Team{Id: teamId}})
+	if err != nil {
+		t.Error(err)
+	}
+
+	defer client.DeleteBucket(bucket.Key)
+
+	test, err := client.CreateTest(&Test{Name: "Environment Test", Description: "A test of a test", Bucket: bucket})
+	if err != nil {
+		t.Error(err)
+	}
+
+	defer client.DeleteTest(test)
+
+	environment := &Environment{
+		Name: "tf_environment",
+		InitialVariables: map[string]string{
+			"VarA" : "ValB",
+			"VarB" : "ValB",
+		},
+		Integrations: []Integration{
+			{
+				Id: "27e48b0d-ba8e-4fe0-bcaa-dd9de08dc47d",
+				IntegrationType: "pagerduty",
+			},
+			{
+				Id: "574f4560-0f50-41da-a2f7-bdce419ad378",
+				IntegrationType: "slack",
+			},
+		},
+	}
+
+	environment, err = client.CreateTestEnvironment(environment, test)
+	defer client.DeleteSharedEnvironment(environment, bucket)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(environment.Id) == 0 {
+		t.Error("Environment id should not be empty")
+	}
+
+	if len(environment.InitialVariables) != 2 {
+		t.Errorf("Expected %d initial variables got %d", 2, len(environment.InitialVariables))
+	}
+}
 
 func TestReadEnvironmentFromResponse(t *testing.T) {
 	responseMap := new(response)

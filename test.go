@@ -7,20 +7,20 @@ import (
 )
 
 type Test struct {
-	Id                 string    `json:"id,omitempty"`
-	Bucket             *Bucket   `json:"-"`
-	Name               string    `json:"name"`
-	Description        string    `json:"description"`
-	CreatedAt          time.Time `json:"created_at"`
-	CreatedBy          Contact   `json:"created_by"`
-	DefaultEnvironment string    `json:"default_environment_id"`
-	ExportedAt         time.Time `json:"exported_at"`
+	Id                   string    `json:"id,omitempty"`
+	Bucket               *Bucket   `json:"-"`
+	Name                 string    `json:"name,omitempty"`
+	Description          string    `json:"description,omitempty"`
+	CreatedAt            time.Time `json:"created_at,omitempty"`
+	CreatedBy            Contact   `json:"created_by,omitempty"`
+	DefaultEnvironmentId string    `json:"default_environment_id,omitempty"`
+	ExportedAt           time.Time `json:"exported_at,omitempty"`
 }
 
 type Contact struct {
-	Email         string     `json:"email"`
+	Email         string     `json:"email,omitempty"`
         Id            string     `json:"id"`
-        Name          string     `json:"name"`
+        Name          string     `json:"name,omitempty"`
 }
 
 func NewTest() *Test {

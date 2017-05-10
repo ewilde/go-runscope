@@ -34,6 +34,7 @@ func (client *Client) CreateBucket(bucket Bucket) (*Bucket, error) {
 		return nil, err
 	}
 
+	log.Printf("[DEBUG] %#v", req)
 	resp, err := client.Http.Do(req)
 	if err != nil {
 		return nil, err

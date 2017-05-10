@@ -94,6 +94,35 @@ func TestUpdateTest(t *testing.T) {
 	}
 }
 
+func TestUpdateTestUsingPartiallyFilledOutObject(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: Team{Id: teamId}})
+	defer client.DeleteBucket(bucket.Key)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
+	test, err = client.CreateTest(test)
+	defer client.DeleteTest(test)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	testUpdate := &Test{ Id: test.Id, Description: "New description", Bucket: bucket}
+	resource, err := client.UpdateTest(testUpdate)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if resource.Data["description"] != testUpdate.Description {
+		t.Errorf("Expected description %s, actual %s", testUpdate.Description, resource.Data["description"])
+	}
+}
+
 
 func TestReadFromResponse(t *testing.T) {
 	responseBody := `
@@ -185,8 +214,8 @@ func TestReadFromResponse(t *testing.T) {
 		t.Errorf("Expected created by %s, actual %s", "8512774f-de31-433e-b068-ed76819b2842", test.CreatedBy.Email)
 	}
 
-	if test.DefaultEnvironment != "8e7afae4-23b6-492a-b4b9-75d515b5082b" {
-		t.Errorf("Expected created by %s, actual %s", "8e7afae4-23b6-492a-b4b9-75d515b5082b", test.DefaultEnvironment)
+	if test.DefaultEnvironmentId != "8e7afae4-23b6-492a-b4b9-75d515b5082b" {
+		t.Errorf("Expected created by %s, actual %s", "8e7afae4-23b6-492a-b4b9-75d515b5082b", test.DefaultEnvironmentId)
 	}
 
 	expectedTime = time.Unix(int64(1294023235), 0)
