@@ -9,7 +9,7 @@ import (
 func TestCreateTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: Team{Id: teamId}})
+	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -24,7 +24,7 @@ func TestCreateTest(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(test.Id) == 0 {
+	if len(test.ID) == 0 {
 		t.Error("Test id should not be empty")
 	}
 
@@ -36,7 +36,7 @@ func TestCreateTest(t *testing.T) {
 func TestReadTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "newTest", Team: Team{Id: teamId}})
+	bucket, err := client.CreateBucket(Bucket{Name: "newTest", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -68,7 +68,7 @@ func TestReadTest(t *testing.T) {
 func TestUpdateTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: Team{Id: teamId}})
+	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -84,20 +84,20 @@ func TestUpdateTest(t *testing.T) {
 	}
 
 	test.Description = "New description"
-	resource, err := client.UpdateTest(test)
+	updatedTest, err := client.UpdateTest(test)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if resource.Data["description"] != test.Description {
-		t.Errorf("Expected description %s, actual %s", test.Description, resource.Data["description"])
+	if updatedTest.Description != test.Description {
+		t.Errorf("Expected description %s, actual %s", test.Description, updatedTest.Description)
 	}
 }
 
 func TestUpdateTestUsingPartiallyFilledOutObject(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: Team{Id: teamId}})
+	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -112,14 +112,14 @@ func TestUpdateTestUsingPartiallyFilledOutObject(t *testing.T) {
 		t.Error(err)
 	}
 
-	testUpdate := &Test{ Id: test.Id, Description: "New description", Bucket: bucket}
-	resource, err := client.UpdateTest(testUpdate)
+	testUpdate := &Test{ ID: test.ID, Description: "New description", Bucket: bucket}
+	updatedTest, err := client.UpdateTest(testUpdate)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if resource.Data["description"] != testUpdate.Description {
-		t.Errorf("Expected description %s, actual %s", testUpdate.Description, resource.Data["description"])
+	if updatedTest.Description != testUpdate.Description {
+		t.Errorf("Expected description %s, actual %s", testUpdate.Description, updatedTest.Description)
 	}
 }
 
@@ -210,12 +210,12 @@ func TestReadFromResponse(t *testing.T) {
 		t.Errorf("Expected created by %s, actual %s", "edward.wilde@acme.com", test.CreatedBy.Email)
 	}
 
-	if test.CreatedBy.Id != "8512774f-de31-433e-b068-ed76819b2842" {
+	if test.CreatedBy.ID != "8512774f-de31-433e-b068-ed76819b2842" {
 		t.Errorf("Expected created by %s, actual %s", "8512774f-de31-433e-b068-ed76819b2842", test.CreatedBy.Email)
 	}
 
-	if test.DefaultEnvironmentId != "8e7afae4-23b6-492a-b4b9-75d515b5082b" {
-		t.Errorf("Expected created by %s, actual %s", "8e7afae4-23b6-492a-b4b9-75d515b5082b", test.DefaultEnvironmentId)
+	if test.DefaultEnvironmentID != "8e7afae4-23b6-492a-b4b9-75d515b5082b" {
+		t.Errorf("Expected created by %s, actual %s", "8e7afae4-23b6-492a-b4b9-75d515b5082b", test.DefaultEnvironmentID)
 	}
 
 	expectedTime = time.Unix(int64(1294023235), 0)

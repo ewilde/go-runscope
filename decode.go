@@ -25,7 +25,7 @@ func floatToTimeDurationHookFunc() mapstructure.DecodeHookFunc {
 	}
 }
 
-func Decode(result interface{}, response interface{}) error {
+func decode(result interface{}, response interface{}) error {
 
 	config := &mapstructure.DecoderConfig{
 		Metadata: nil,

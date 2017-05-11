@@ -10,7 +10,7 @@ import (
 func TestCreateEnvironment(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: Team{Id: teamId}})
+	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -23,13 +23,13 @@ func TestCreateEnvironment(t *testing.T) {
 			"VarA" : "ValB",
 			"VarB" : "ValB",
 		},
-		Integrations: []Integration{
+		Integrations: []*Integration {
 			{
-				Id: "27e48b0d-ba8e-4fe0-bcaa-dd9de08dc47d",
+				ID:              "27e48b0d-ba8e-4fe0-bcaa-dd9de08dc47d",
 				IntegrationType: "pagerduty",
 			},
 			{
-				Id: "574f4560-0f50-41da-a2f7-bdce419ad378",
+				ID:              "574f4560-0f50-41da-a2f7-bdce419ad378",
 				IntegrationType: "slack",
 			},
 		 },
@@ -42,7 +42,7 @@ func TestCreateEnvironment(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(environment.Id) == 0 {
+	if len(environment.ID) == 0 {
 		t.Error("Environment id should not be empty")
 	}
 
@@ -54,7 +54,7 @@ func TestCreateEnvironment(t *testing.T) {
 func TestCreateTestEnvironment(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: Team{Id: teamId}})
+	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
 	if err != nil {
 		t.Error(err)
 	}
@@ -74,13 +74,13 @@ func TestCreateTestEnvironment(t *testing.T) {
 			"VarA" : "ValB",
 			"VarB" : "ValB",
 		},
-		Integrations: []Integration{
+		Integrations: []*Integration{
 			{
-				Id: "27e48b0d-ba8e-4fe0-bcaa-dd9de08dc47d",
+				ID:              "27e48b0d-ba8e-4fe0-bcaa-dd9de08dc47d",
 				IntegrationType: "pagerduty",
 			},
 			{
-				Id: "574f4560-0f50-41da-a2f7-bdce419ad378",
+				ID:              "574f4560-0f50-41da-a2f7-bdce419ad378",
 				IntegrationType: "slack",
 			},
 		},
@@ -93,7 +93,7 @@ func TestCreateTestEnvironment(t *testing.T) {
 		t.Error(err)
 	}
 
-	if len(environment.Id) == 0 {
+	if len(environment.ID) == 0 {
 		t.Error("Environment id should not be empty")
 	}
 
@@ -125,7 +125,7 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 		t.Errorf("Expected PreserveCookies %t, actual %t", true, environment.PreserveCookies)
 	}
 
-	if environment.TestId != "a10c97e6-2024-41ca-990d-5e0b5f751734" {
+	if environment.TestID != "a10c97e6-2024-41ca-990d-5e0b5f751734" {
 		t.Errorf("Expected test id %s, actual %s", "a10c97e6-2024-41ca-990d-5e0b5f751734", environment.Script)
 	}
 
@@ -141,14 +141,14 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 		t.Errorf("Expected %d integrations, actual %d", 2, len(environment.Integrations))
 	}
 
-	if environment.Integrations[1].Id != "1b766ead-b3d1-456f-a350-83845a428ed1" ||
+	if environment.Integrations[1].ID != "1b766ead-b3d1-456f-a350-83845a428ed1" ||
 	   environment.Integrations[1].Description != "PagerDuty: Runscope Service" ||
 	   environment.Integrations[1].IntegrationType != "pagerduty" {
 		t.Errorf("Expected integration not correct got #%v", environment.Integrations[1])
 	}
 
-	if environment.Id != "c392d38e-70df-4181-abe5-51864ccf8f23" {
-		t.Errorf("Expected id %s, actual %s", "c392d38e-70df-4181-abe5-51864ccf8f23", environment.Id)
+	if environment.ID != "c392d38e-70df-4181-abe5-51864ccf8f23" {
+		t.Errorf("Expected id %s, actual %s", "c392d38e-70df-4181-abe5-51864ccf8f23", environment.ID)
 	}
 
 	if len (environment.Regions) != 2 {
@@ -171,7 +171,7 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 
 	if len (environment.RemoteAgents) != 1 ||
 		environment.RemoteAgents[0].Name != "my-local-machine.runscope.com" ||
-		environment.RemoteAgents[0].Uuid != "141d4dbc-1e41-401e-8067-6df18501e9ed" {
+		environment.RemoteAgents[0].UUID != "141d4dbc-1e41-401e-8067-6df18501e9ed" {
 		t.Errorf("Expected remote agent not correct got #%v", environment.RemoteAgents[0])
 	}
 
@@ -180,15 +180,15 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 		t.Errorf("Expected web hooks are not correct got #%v", environment.WebHooks)
 	}
 
-	if environment.ParentEnvironmentId != "8ace1fbb-9626-4455-b006-116ba7154c1c" {
-		t.Errorf("Expected parent environment id %s, actual %s", "8ace1fbb-9626-4455-b006-116ba7154c1c", environment.ParentEnvironmentId)
+	if environment.ParentEnvironmentID != "8ace1fbb-9626-4455-b006-116ba7154c1c" {
+		t.Errorf("Expected parent environment id %s, actual %s", "8ace1fbb-9626-4455-b006-116ba7154c1c", environment.ParentEnvironmentID)
 	}
 
 	if !environment.EmailSettings.NotifyAll ||
 		environment.EmailSettings.NotifyOn != "all" ||
 		environment.EmailSettings.NotifyThreshold != 4 ||
 		len (environment.EmailSettings.Recipients) != 1 ||
-		environment.EmailSettings.Recipients[0].Id != "4ee15ecc-7fe1-43cb-aa12-ef50420f2cf9" {
+		environment.EmailSettings.Recipients[0].ID != "4ee15ecc-7fe1-43cb-aa12-ef50420f2cf9" {
 		t.Errorf("Expected email settings not correct got #%v", environment.EmailSettings)
 	}
 }

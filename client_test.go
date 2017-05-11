@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-var teamId string
+var teamID string
 
 func TestDeserializeResult(t *testing.T) {
 	responseBody := `
@@ -44,7 +44,7 @@ func TestDeserializeResult(t *testing.T) {
 }
 
 func clientConfigure() *Client {
-	return NewClient("https://api.runscope.com", os.Getenv("RUNSCOPE_ACCESS_TOKEN"))
+	return NewClient(APIURL, os.Getenv("RUNSCOPE_ACCESS_TOKEN"))
 }
 
 func testPreCheck(t *testing.T) {
@@ -62,5 +62,5 @@ func testPreCheck(t *testing.T) {
 		t.Fatal("RUNSCOPE_TEAM_ID must be set for acceptance tests")
 	}
 
-	teamId = os.Getenv("RUNSCOPE_TEAM_ID")
+	teamID = os.Getenv("RUNSCOPE_TEAM_ID")
 }

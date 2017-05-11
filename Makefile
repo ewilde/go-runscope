@@ -10,9 +10,10 @@ $(BINARY): $(SOURCES)
 
 .PHONY: build
 build:
-	go get ./...
-	go test ./...
-	go vet ./...
+	go get github.com/golang/lint/golint
+	go test $(go list ./... | grep -v /vendor/)
+	go vet $(go list ./... | grep -v /vendor/)
+	golint $(go list ./... | grep -v /vendor/)
 
 .PHONY: test
 test:

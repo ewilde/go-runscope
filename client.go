@@ -14,15 +14,20 @@ import (
 	"strings"
 )
 
+// APIURL is the default runscope api uri
+const APIURL = "https://api.runscope.com"
+
+// Client provides access to create, read, update and delete runscope resources
 type Client struct {
-	ApiUrl      string
+	APIURL      string
 	AccessToken string
-	Http        *http.Client
+	HTTP        *http.Client
 }
 
+// Team to which buckets belong to
 type Team struct {
 	Name string
-	Id   string
+	ID   string
 }
 
 type response struct {
@@ -46,11 +51,12 @@ type metaResponse struct {
 	Status string `json:"status"`
 }
 
-func NewClient(apiUrl string, accessToken string) *Client {
+// NewClient creates a new client instance
+func NewClient(apiURL string, accessToken string) *Client {
 	client := Client{
-		ApiUrl:      apiUrl,
+		APIURL:      apiURL,
 		AccessToken: accessToken,
-		Http:        cleanhttp.DefaultClient(),
+		HTTP:        cleanhttp.DefaultClient(),
 	}
 
 	return &client
@@ -72,7 +78,7 @@ func (client *Client) createResource(
 		return nil, err
 	}
 
-	resp, err := client.Http.Do(req)
+	resp, err := client.HTTP.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -86,15 +92,16 @@ func (client *Client) createResource(
 		errorResp := new(errorResponse)
 		if err = json.Unmarshal(bodyBytes, &errorResp); err != nil {
 			return nil, fmt.Errorf("Error creating %s: %s", resourceType, resourceName)
-		} else {
-			return nil, fmt.Errorf("Error creating %s: %s, status: %d reason: %q", resourceType,
-				resourceName, errorResp.Status, errorResp.ErrorMessage)
 		}
-	} else {
-		response := new(response)
-		json.Unmarshal(bodyBytes, &response)
-		return response, nil
+
+		return nil, fmt.Errorf("Error creating %s: %s, status: %d reason: %q", resourceType,
+			resourceName, errorResp.Status, errorResp.ErrorMessage)
 	}
+
+	response := new(response)
+	json.Unmarshal(bodyBytes, &response)
+	return response, nil
+
 }
 
 func (client *Client) readResource(resourceType string, resourceName string, endpoint string) (*response, error) {
@@ -106,7 +113,7 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 		return response, err
 	}
 
-	resp, err := client.Http.Do(req)
+	resp, err := client.HTTP.Do(req)
 	if err != nil {
 		return response, err
 	}
@@ -121,33 +128,33 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 		if err = json.Unmarshal(bodyBytes, &errorResp); err != nil {
 			return response, fmt.Errorf("Status: %s Error reading %s: %s",
 				resp.Status, resourceType, resourceName)
-		} else {
-			return response, fmt.Errorf("Status: %s Error reading %s: %s, reason: %q",
-				resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 		}
-	} else {
-		json.Unmarshal(bodyBytes, &response)
-		return response, nil
+
+		return response, fmt.Errorf("Status: %s Error reading %s: %s, reason: %q",
+			resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 	}
+
+	json.Unmarshal(bodyBytes, &response)
+	return response, nil
 }
 
-func (client *Client) updateResource(resource interface{}, resourceType string, resourceName string, endpoint string) (interface{}, error) {
+func (client *Client) updateResource(resource interface{}, resourceType string, resourceName string, endpoint string) (*response, error) {
 	log.Printf("[DEBUG] updating %s %s", resourceType, resourceName)
 	response := response{}
 	bytes, err := json.Marshal(resource)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	log.Printf("[DEBUG] 	request: PUT %s %s", endpoint, string(bytes))
 	req, err := client.newRequest("PUT", endpoint, bytes)
 	if err != nil {
-		return response, err
+		return &response, err
 	}
 
-	resp, err := client.Http.Do(req)
+	resp, err := client.HTTP.Do(req)
 	if err != nil {
-		return response, err
+		return &response, err
 	}
 	defer resp.Body.Close()
 
@@ -158,16 +165,16 @@ func (client *Client) updateResource(resource interface{}, resourceType string, 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
 		if err = json.Unmarshal(bodyBytes, &errorResp); err != nil {
-			return response, fmt.Errorf("Status: %s Error reading %s: %s",
+			return &response, fmt.Errorf("Status: %s Error reading %s: %s",
 				resp.Status, resourceType, resourceName)
-		} else {
-			return response, fmt.Errorf("Status: %s Error reading %s: %s, reason: %q",
-				resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 		}
-	} else {
-		json.Unmarshal(bodyBytes, &response)
-		return response, nil
+
+		return &response, fmt.Errorf("Status: %s Error reading %s: %s, reason: %q",
+			resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 	}
+
+	json.Unmarshal(bodyBytes, &response)
+	return &response, nil
 }
 
 func (client *Client) deleteResource(resourceType string, resourceName string, endpoint string) (error) {
@@ -178,7 +185,7 @@ func (client *Client) deleteResource(resourceType string, resourceName string, e
 	}
 
 	log.Printf("[DEBUG] 	request: DELETE %s", endpoint)
-	resp, err := client.Http.Do(req)
+	resp, err := client.HTTP.Do(req)
 	log.Printf("[DEBUG] 	response: %d", resp.StatusCode)
 	if err != nil {
 		return err
@@ -194,19 +201,19 @@ func (client *Client) deleteResource(resourceType string, resourceName string, e
 		if err = json.Unmarshal(bodyBytes, &errorResp); err != nil {
 			return fmt.Errorf("Status: %s Error deleting %s: %s",
 				resp.Status, resourceType, resourceName)
-		} else {
-			return fmt.Errorf("Status: %s Error deleting %s: %s, reason: %q",
-				resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 		}
+
+		return fmt.Errorf("Status: %s Error deleting %s: %s, reason: %q",
+			resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 	}
 
 	return nil
 }
 
-func (client *Client) newFormUrlEncodedRequest(method string, endpoint string, data url.Values) (*http.Request, error) {
+func (client *Client) newFormURLEncodedRequest(method string, endpoint string, data url.Values) (*http.Request, error) {
 
 	var urlStr string
-	urlStr = client.ApiUrl + endpoint
+	urlStr = client.APIURL + endpoint
 	url, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, fmt.Errorf("Error during parsing request URL: %s", err)
@@ -227,7 +234,7 @@ func (client *Client) newFormUrlEncodedRequest(method string, endpoint string, d
 func (client *Client) newRequest(method string, endpoint string, body []byte) (*http.Request, error) {
 
 	var urlStr string
-	urlStr = client.ApiUrl + endpoint
+	urlStr = client.APIURL + endpoint
 	url, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, fmt.Errorf("Error during parsing request URL: %s", err)

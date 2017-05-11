@@ -9,7 +9,7 @@ import (
 func TestCreateBucket(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: Team{Id: teamId}})
+	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
 
 	if err != nil {
 		t.Error(err)
@@ -22,7 +22,7 @@ func TestReadBucket(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 
-	createdBucket, err := client.CreateBucket(Bucket{Name: "terraform-client.go-test", Team: Team{Id: teamId}})
+	createdBucket, err := client.CreateBucket(Bucket{Name: "terraform-client.go-test", Team: &Team{ID: teamID}})
 	if err != nil {
 		t.Error(err)
 	}
@@ -36,9 +36,9 @@ func TestReadBucket(t *testing.T) {
 		t.Errorf("Bucket createdBucket expected %s was %s.", createdBucket.Key, readBucket.Key)
 	}
 
-	if readBucket.TestsUrl != fmt.Sprintf("https://api.runscope.com/buckets/%s/tests", readBucket.Key) {
+	if readBucket.TestsURL != fmt.Sprintf("https://api.runscope.com/buckets/%s/tests", readBucket.Key) {
 		t.Errorf("Bucket url expected %s was %s.",
-			fmt.Sprintf("https://api.runscope.com/buckets/%s/tests", readBucket.Key), readBucket.TestsUrl)
+			fmt.Sprintf("https://api.runscope.com/buckets/%s/tests", readBucket.Key), readBucket.TestsURL)
 	}
 
 	client.DeleteBucket(createdBucket.Key)
@@ -84,7 +84,7 @@ func TestBucketReadFromResponse(t *testing.T) {
 		t.Errorf("Expected name %s, actual %s", "Sample Name", bucket.Name)
 	}
 
-	if len(bucket.TestsUrl) == 0 {
+	if len(bucket.TestsURL) == 0 {
 		t.Error("Missing test url")
 	}
 }
