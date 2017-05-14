@@ -10,7 +10,7 @@ import (
 func TestCreateEnvironment(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
+	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -54,7 +54,7 @@ func TestCreateEnvironment(t *testing.T) {
 func TestCreateTestEnvironment(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
+	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
 	if err != nil {
 		t.Error(err)
 	}

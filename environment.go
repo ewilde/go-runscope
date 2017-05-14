@@ -3,6 +3,7 @@ package runscope
 import (
 	"time"
 	"fmt"
+	"encoding/json"
 )
 
 // Environment stores details for shared and test-specific environments. See https://www.runscope.com/docs/api/environments
@@ -96,6 +97,15 @@ func (client *Client) DeleteSharedEnvironment(environment *Environment, bucket *
 func (client *Client) DeleteTestEnvironment(environment *Environment, test *Test) error {
 	return client.deleteResource("Environment", environment.ID,
 		fmt.Sprintf("/buckets/%s/environments/%s/tests/%s", test.Bucket.Key, test.ID, environment.ID))
+}
+
+func (environment *Environment) String() string {
+	value, err := json.Marshal(environment)
+	if err != nil {
+		return ""
+	}
+
+	return string(value)
 }
 
 func (client *Client) createEnvironment(environment *Environment, endpoint string) (*Environment, error) {

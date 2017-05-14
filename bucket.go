@@ -27,7 +27,7 @@ type Bucket struct {
 }
 
 // CreateBucket creates a new bucket resource. See https://www.runscope.com/docs/api/buckets#bucket-create
-func (client *Client) CreateBucket(bucket Bucket) (*Bucket, error) {
+func (client *Client) CreateBucket(bucket *Bucket) (*Bucket, error) {
 	log.Printf("[DEBUG] creating bucket %s", bucket.Name)
 	data := url.Values{}
 	data.Add("name", bucket.Name)
@@ -81,6 +81,15 @@ func (client *Client) ReadBucket(key string) (*Bucket, error) {
 // DeleteBucket deletes a bucket by key. See https://www.runscope.com/docs/api/buckets#bucket-delete
 func (client *Client) DeleteBucket(key string) error {
 	return client.deleteResource("bucket", key, fmt.Sprintf("/buckets/%s", key))
+}
+
+func (bucket *Bucket) String() string {
+	value, err := json.Marshal(bucket)
+	if err != nil {
+		return ""
+	}
+
+	return string(value)
 }
 
 func getBucketFromResponse(response interface{}) (*Bucket, error) {

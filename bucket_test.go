@@ -9,7 +9,7 @@ import (
 func TestCreateBucket(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
+	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
 
 	if err != nil {
 		t.Error(err)
@@ -22,7 +22,7 @@ func TestReadBucket(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 
-	createdBucket, err := client.CreateBucket(Bucket{Name: "terraform-client.go-test", Team: &Team{ID: teamID}})
+	createdBucket, err := client.CreateBucket(&Bucket{Name: "terraform-client.go-test", Team: &Team{ID: teamID}})
 	if err != nil {
 		t.Error(err)
 	}

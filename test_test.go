@@ -9,7 +9,7 @@ import (
 func TestCreateTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
+	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func TestCreateTest(t *testing.T) {
 func TestReadTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "newTest", Team: &Team{ID: teamID}})
+	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -68,7 +68,7 @@ func TestReadTest(t *testing.T) {
 func TestUpdateTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
+	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -97,7 +97,7 @@ func TestUpdateTest(t *testing.T) {
 func TestUpdateTestUsingPartiallyFilledOutObject(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(Bucket{Name: "test", Team: &Team{ID: teamID}})
+	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
 	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
@@ -174,8 +174,83 @@ func TestReadFromResponse(t *testing.T) {
         "client_certificate": null
       }
     ],
-    "schedules": [],
-    "steps": [],
+     "schedules": [
+      {
+        "environment_id": "d44fe112-74ea-4713-92fc-caa27ef8ce8a",
+        "interval": "1m",
+        "note": null,
+        "version": "1.0",
+        "exported_at": 1494623265,
+        "id": "c4058b68-3493-44f0-b25e-c33db257e366"
+      }
+    ],
+    "steps": [
+      {
+        "url": "{{base_url}}/v1/users",
+        "variables": [
+		{
+		    "name": "source_ip",
+		    "property": "origin",
+		    "source": "response_json"
+		}
+	    ],
+        "args": {},
+        "step_type": "request",
+        "auth": {},
+        "id": "e4044178-3b78-43fd-b67c-3316bfe526a9",
+        "note": "",
+        "headers": {
+          "Authorization": [
+            "bearer {{token}}"
+          ]
+        },
+        "request_id": "2dbfb5d2-3b5a-499c-9550-b06f9a475feb",
+        "assertions": [
+          {
+            "comparison": "equal_number",
+            "value": 200,
+            "source": "response_status"
+          }
+        ],
+        "scripts": [],
+        "before_scripts": [],
+        "data": "",
+        "method": "GET"
+      }
+    ],
+    "last_run": {
+      "remote_agent_uuid": null,
+      "finished_at": 1494623241.385894,
+      "error_count": 0,
+      "message_success": 1,
+      "test_uuid": "7aec8f16-8680-41fe-b0df-4c9be99b3a26",
+      "id": "50ded770-f0b5-48ec-91ce-782a932d6b80",
+      "extractor_success": 0,
+      "uuid": "50ded770-f0b5-48ec-91ce-782a932d6b80",
+      "environment_uuid": "d44fe112-74ea-4713-92fc-caa27ef8ce8a",
+      "environment_name": "Test Settings",
+      "source": "scheduled",
+      "remote_agent_name": null,
+      "remote_agent": null,
+      "status": "completed",
+      "bucket_key": "taank6ebawmk",
+      "remote_agent_version": "unknown",
+      "substitution_success": 0,
+      "message_count": 1,
+      "script_count": 0,
+      "substitution_count": 0,
+      "script_success": 0,
+      "assertion_count": 1,
+      "assertion_success": 1,
+      "created_at": 1494623238.460797,
+      "messages": [],
+      "extractor_count": 0,
+      "template_uuids": [
+        "699db99e-8c7a-4922-9a0b-a73da87387fb",
+        "e4044178-3b78-43fd-b67c-3316bfe526a9"
+      ],
+      "region": "us1"
+    },
     "id": "f0699a4b-0141-4fa2-8007-e016acede2bf",
     "description": "My test description"
   },
@@ -222,5 +297,32 @@ func TestReadFromResponse(t *testing.T) {
 	if !test.ExportedAt.Equal(expectedTime) {
 		t.Errorf("Expected time %s, actual %s",  expectedTime.String(), test.ExportedAt)
 	}
+
+	if len(test.Environments) != 1 {
+		t.Errorf("Expected %d environments, actual %d",  1, len(test.Environments))
+	}
+
+	if test.Environments[0].ID != "7e7afae4-23b6-492a-b4b9-75d515b5082b" {
+		t.Errorf("Expected environment id %s, actual %s", "7e7afae4-23b6-492a-b4b9-75d515b5082b", test.Environments[0].ID)
+	}
+
+	if test.LastRun == nil {
+		t.Error("LastRun nil")
+	}
+
+	expectedTime = time.Unix(1494623241, 385894060)
+	if !test.LastRun.FinishedAt.Equal(expectedTime) {
+		t.Errorf("Expected last run finished at time %s, actual %s",  expectedTime.String(), test.LastRun.FinishedAt)
+	}
+
+	if len(test.Steps) != 1 {
+		t.Errorf("Expected %d steps, actual %d",  1, len(test.Steps))
+	}
+
+	step := test.Steps[0]
+	if step.URL != "{{base_url}}/v1/users" {
+		t.Errorf("Expected step url %s, actual %s",  "{{base_url}}/v1/users", step.URL)
+	}
+
 
 }
