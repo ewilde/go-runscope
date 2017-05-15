@@ -198,7 +198,7 @@ func TestReadFromResponse(t *testing.T) {
         "step_type": "request",
         "auth": {},
         "id": "e4044178-3b78-43fd-b67c-3316bfe526a9",
-        "note": "",
+        "note": "some note",
         "headers": {
           "Authorization": [
             "bearer {{token}}"
@@ -212,7 +212,11 @@ func TestReadFromResponse(t *testing.T) {
             "source": "response_status"
           }
         ],
-        "scripts": [],
+        "scripts": [
+		{
+		    "value": "log(\"This is a sample script\");"
+		}
+	    ],
         "before_scripts": [],
         "data": "",
         "method": "GET"
@@ -324,5 +328,72 @@ func TestReadFromResponse(t *testing.T) {
 		t.Errorf("Expected step url %s, actual %s",  "{{base_url}}/v1/users", step.URL)
 	}
 
+	if len(step.Variables) != 1 {
+		t.Errorf("Expected %d variables, actual %d",  1, len(step.Variables))
+	}
 
+	variable := step.Variables[0]
+	if variable.Name != "source_ip" {
+		t.Errorf("Expected variable name %s, actual %s",  "source_ip", variable.Name)
+	}
+
+	if variable.Property != "origin" {
+		t.Errorf("Expected variable property %s, actual %s",  "origin", variable.Property)
+	}
+
+	if variable.Source != "response_json" {
+		t.Errorf("Expected variable source %s, actual %s",  "origin", variable.Source)
+	}
+
+	if step.StepType != "request" {
+		t.Errorf("Expected step type %s, actual %s",  "request", step.StepType)
+	}
+
+	if step.ID != "e4044178-3b78-43fd-b67c-3316bfe526a9" {
+		t.Errorf("Expected step type %s, actual %s",  "e4044178-3b78-43fd-b67c-3316bfe526a9", step.StepType)
+	}
+
+	if len(step.Headers) != 1 {
+		t.Errorf("Expected %d headers, actual %d",  1, len(step.Headers))
+	}
+
+	header := step.Headers["Authorization"]
+	if len(header) != 1 {
+		t.Errorf("Expected %d authorization values, actual %d",  1, len(header))
+	}
+
+	if header[0] != "bearer {{token}}" {
+		t.Errorf("Expected authorization header %s, actual %s", "bearer {{token}}", header[0])
+	}
+
+	if step.RequestId != "2dbfb5d2-3b5a-499c-9550-b06f9a475feb" {
+		t.Errorf("Expected step request id %s, actual %s",  "2dbfb5d2-3b5a-499c-9550-b06f9a475feb", step.StepType)
+	}
+
+	if len(step.Assertions) != 1 {
+		t.Errorf("Expected %d assertions, actual %d",  1, len(step.Assertions))
+	}
+
+	assertion := step.Assertions[0]
+	if assertion.Comparison != "equal_number" {
+		t.Errorf("Expected assertion comparison %s, actual %s", "equal_number", assertion.Comparison)
+	}
+
+	if assertion.Value != float64(200) {
+		t.Errorf("Expected assertion value %d, actual %d", 200, assertion.Value)
+	}
+
+	if assertion.Source != "response_status" {
+		t.Errorf("Expected assertion source %s, actual %s", "response_status", assertion.Source)
+	}
+
+	if len(step.Scripts) != 1 {
+		t.Errorf("Expected %d scripts, actual %d",  1, len(step.Scripts))
+	}
+
+	script := step.Scripts[0]
+
+	if script.Value != "log(\"This is a sample script\");" {
+		t.Errorf("Expected script value %s, actual %s", "log(\"This is a sample script\");", script.Value)
+	}
 }

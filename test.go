@@ -23,60 +23,70 @@ type Test struct {
 
 // TestRun represents the details of the last time the test ran
 type TestRun struct {
-	RemoteAgentUUID     string `json:"remote_agent_uuid,omitempty"`
+	RemoteAgentUUID     string     `json:"remote_agent_uuid,omitempty"`
 	FinishedAt          *time.Time `json:"finished_at,omitempty"`
-	ErrorCount          int `json:"error_count,omitempty"`
-	MessageSuccess      int `json:"message_success,omitempty"`
-	TestUUID            string `json:"test_uuid,omitempty"`
-	ID                  string `json:"id,omitempty"`
-	ExtractorSuccess    int `json:"extractor_success,omitempty"`
-	UUID                string `json:"uuid,omitempty"`
-	EnvironmentUUID     string `json:"environment_uuid,omitempty"`
-	EnvironmentName     string `json:"environment_name,omitempty"`
-	Source              string `json:"source,omitempty"`
-	RemoteAgentName     string `json:"remote_agent_name,omitempty"`
-	RemoteAgent         string `json:"remote_agent,omitempty"`
-	Status              string `json:"status,omitempty"`
-	BucketKey           string `json:"bucket_key,omitempty"`
-	RemoteAgentVersion  string `json:"remote_agent_version,omitempty"`
-	SubstitutionSuccess int `json:"substitution_success,omitempty"`
-	MessageCount        int `json:"message_count,omitempty"`
-	ScriptCount         int `json:"script_count,omitempty"`
-	SubstitutionCount   int `json:"substitution_count,omitempty"`
-	ScriptSuccess       int `json:"script_success,omitempty"`
-	AssertionCount      int `json:"assertion_count,omitempty"`
-	AssertionSuccess    int `json:"assertion_success,omitempty"`
+	ErrorCount          int        `json:"error_count,omitempty"`
+	MessageSuccess      int        `json:"message_success,omitempty"`
+	TestUUID            string     `json:"test_uuid,omitempty"`
+	ID                  string     `json:"id,omitempty"`
+	ExtractorSuccess    int        `json:"extractor_success,omitempty"`
+	UUID                string     `json:"uuid,omitempty"`
+	EnvironmentUUID     string     `json:"environment_uuid,omitempty"`
+	EnvironmentName     string     `json:"environment_name,omitempty"`
+	Source              string     `json:"source,omitempty"`
+	RemoteAgentName     string     `json:"remote_agent_name,omitempty"`
+	RemoteAgent         string     `json:"remote_agent,omitempty"`
+	Status              string     `json:"status,omitempty"`
+	BucketKey           string     `json:"bucket_key,omitempty"`
+	RemoteAgentVersion  string     `json:"remote_agent_version,omitempty"`
+	SubstitutionSuccess int        `json:"substitution_success,omitempty"`
+	MessageCount        int        `json:"message_count,omitempty"`
+	ScriptCount         int        `json:"script_count,omitempty"`
+	SubstitutionCount   int        `json:"substitution_count,omitempty"`
+	ScriptSuccess       int        `json:"script_success,omitempty"`
+	AssertionCount      int        `json:"assertion_count,omitempty"`
+	AssertionSuccess    int        `json:"assertion_success,omitempty"`
 	CreatedAt           *time.Time `json:"created_at,omitempty"`
-	Messages            []string` json:"messages,omitempty"`
-	ExtractorCount      int `json:"extractor_count,omitempty"`
-	TemplateUUIDs       []string `json:"template_uuids,omitempty"`
-	Region              string `json:"region,omitempty"`
+	Messages            []string   `json:"messages,omitempty"`
+	ExtractorCount      int        `json:"extractor_count,omitempty"`
+	TemplateUUIDs       []string   `json:"template_uuids,omitempty"`
+	Region              string     `json:"region,omitempty"`
 }
 
 // TestStep represents each step that makes up part of the test
 type TestStep struct {
-	URL       string `json:"url"`
-	Variables []*Variable `json:"variables"`
-	Args      *map[string]interface{} `json:"args"`
-	StepType  string `json:"step_type"`
-	Auth      *map[string]string `json:"auth"`
-	ID        string `json:"id"`
-	Note      string `json:"note"`
+	URL        string                 `json:"url,omitempty"`
+	Variables  []*Variable            `json:"variables,omitempty"`
+	Args       map[string]interface{} `json:"args,omitempty"`
+	StepType   string                 `json:"step_type,omitempty"`
+	Auth       map[string]string      `json:"auth,omitempty"`
+	ID         string                 `json:"id,omitempty"`
+	Body       string                 `json:"body,omitempty"`
+	Note       string                 `json:"note,omitempty"`
+	Headers    map[string][]string    `json:"headers,omitempty"`
+	RequestId  string                 `json:"request_id,omitempty"`
+	Assertions []Assertion            `json:"assertions,omitempty"`
+	Scripts    []Script               `json:"scripts,omitempty"`
 }
 
-// Variable used in a test step
+// Variable allow you to extract data from request, subtest, and Ghost Inspector steps for use in subsequent steps in the test. Similar to Assertions, each variable is defined by a name, source, and property. See https://www.runscope.com/docs/api/steps#variables
 type Variable struct {
 	Name     string `json:"name,omitempty"`
 	Property string `json:"property,omitempty"`
 	Source   string `json:"source,omitempty"`
 }
 
+// Assertion, an assertion comparison to determine whether or not to execute the embedded steps. See https://www.runscope.com/docs/api/steps#assertions
+type Assertion struct {
+	Comparison string      `json:"comparison,omitempty"`
+	Value      interface{} `json:"value,omitempty"`
+	Source     string      `json:"source,omitempty"`
+}
+
+type Script struct {
+	Value string `json:"value"`
+}
 /*
-"headers": {
-"Authorization": [
-"bearer {{token}}"
-]
-},
 "request_id": "2dbfb5d2-3b5a-499c-9550-b06f9a475feb",
 "assertions": [
 {
