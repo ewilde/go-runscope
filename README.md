@@ -173,7 +173,7 @@ Your team url can be found by taking the uuid from https://www.runscope.com/team
 
 ## Contributing
 
-1. Fork it ( https://github.com/PagerDuty/go-pagerduty/fork )
+1. Fork it ( https://github.com/ewilde/go-runscope/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Make sure that `make build` passes with test running
 3. Commit your changes (`git commit -am 'Add some feature'`)
