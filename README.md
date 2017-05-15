@@ -42,8 +42,9 @@ Complete examples can be found in the [examples folder](examples) or
 in the unit tests
 
 #### Bucket
-Client.CreateBucket(bucket *Bucket) (*Bucket, error)
 ```go
+Client.CreateBucket(bucket *Bucket) (*Bucket, error)
+...
     var bucket = &runscope.Bucket{
         Name: "My first bucket",
         Team: &runscope.Team{
@@ -53,8 +54,10 @@ Client.CreateBucket(bucket *Bucket) (*Bucket, error)
 	bucket, err := client.CreateBucket(&{Bucket{Name: "test", Team}})
 ```
 
-Client.ReadBucket(key string) (*Bucket, error)
+
 ```go
+Client.ReadBucket(key string) (*Bucket, error)
+...
     bucket, err := client.ReadBucket("htqee6p4dhvc")
     if err != nil {
         log.Printf("[ERROR] error creating bucket: %s", err)
@@ -63,8 +66,10 @@ Client.ReadBucket(key string) (*Bucket, error)
     fmt.Printf("Bucket read successfully: %s", bucket.String())
 ```
 
-Client.DeleteBucket(key string)
+
 ```go
+Client.DeleteBucket(key string)
+...
     err := client.DeleteBucket("htqee6p4dhvc")
     if err != nil {
         log.Printf("[ERROR] error creating bucket: %s", err)
@@ -98,6 +103,7 @@ environment := &runscope.Environment{
 	}
 ```
 
+```go
 Client.ReadSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
 
 Client.ReadTestEnvironment(environment *Environment, test *Test) (*Environment, error)
@@ -105,10 +111,11 @@ Client.ReadTestEnvironment(environment *Environment, test *Test) (*Environment, 
 Client.UpdateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
 
 Client.UpdateTestEnvironment(environment *Environment, test *Test) (*Environment, error)
-
+```
 #### Test
-Client.CreateTest(test *Test) (*Test, error) (*Environment, error)
 ```go
+Client.CreateTest(test *Test) (*Test, error) (*Environment, error)
+...
     test := &Test{ Name: "tf_test", Description: "This is a tf new test", Bucket: bucket }
 	test, err = client.CreateTest(newTest)
 	defer client.DeleteTest(newTest)
@@ -116,16 +123,17 @@ Client.CreateTest(test *Test) (*Test, error) (*Environment, error)
 	if err != nil {
 		t.Error(err)
 	}
-```
+
 Client.ReadTest(test *Test) (*Test, error)
 
 Client.UpdateTest(test *Test) (*Test, error)
 
 Client.DeleteTest(test *Test) error
-
+```
 #### Test step
-Client.CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
 ```go
+Client.CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+...
     step := NewTestStep()
     step.StepType = "request"
     step.URL = "http://example.com"
@@ -140,13 +148,13 @@ Client.CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*Tes
     if err != nil {
         t.Error(err)
     }
-```
+
 Client.ReadTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
 
 Client.UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
 
 Client.DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error
-
+```
 ## Developing
 ### Running the tests
 By default the tests requiring access to the runscope api (most of them)
