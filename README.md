@@ -104,6 +104,42 @@ Client.ReadTestEnvironment(environment *Environment, test *Test) (*Environment, 
 Client.UpdateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
 Client.UpdateTestEnvironment(environment *Environment, test *Test) (*Environment, error)
 
+#### Test
+Client.CreateTest(test *Test) (*Test, error) (*Environment, error)
+```go
+    test := &Test{ Name: "tf_test", Description: "This is a tf new test", Bucket: bucket }
+	test, err = client.CreateTest(newTest)
+	defer client.DeleteTest(newTest)
+
+	if err != nil {
+		t.Error(err)
+	}
+```
+Client.ReadTest(test *Test) (*Test, error)
+Client.UpdateTest(test *Test) (*Test, error)
+Client.DeleteTest(test *Test) error
+
+#### Test step
+Client.CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+```go
+    step := NewTestStep()
+    step.StepType = "request"
+    step.URL = "http://example.com"
+    step.Method = "GET"
+    step.Assertions = [] Assertion {{
+        Source: "response_status",
+        Comparison : "equal_number",
+        Value: 200,
+    }}
+
+    step, err = client.CreateTestStep(step, bucket.Key, test.ID)
+    if err != nil {
+        t.Error(err)
+    }
+```
+Client.ReadTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+Client.UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+Client.DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error
 
 ## Developing
 ### Running the tests

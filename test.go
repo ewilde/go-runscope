@@ -77,7 +77,7 @@ type Variable struct {
 	Source   string `json:"source,omitempty"`
 }
 
-// Assertion  allow you to specify success criteria for a given request, Ghost Inspector, subtest, or condition step. Each assertion is defined by a source, property, comparison, and value. See https://www.runscope.com/docs/api/steps#assertions
+// Assertion allow you to specify success criteria for a given request, Ghost Inspector, subtest, or condition step. Each assertion is defined by a source, property, comparison, and value. See https://www.runscope.com/docs/api/steps#assertions
 type Assertion struct {
 	Comparison string      `json:"comparison,omitempty"`
 	Value      interface{} `json:"value,omitempty"`
@@ -85,6 +85,7 @@ type Assertion struct {
 	Property   string      `json:"property,omitempty"`
 }
 
+// Script not sure how this is used, currently not documented, but looks like a javascript string that gets evaluated? See See https://www.runscope.com/docs/api/steps
 type Script struct {
 	Value string `json:"value"`
 }
