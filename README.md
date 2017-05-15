@@ -98,10 +98,12 @@ environment := &runscope.Environment{
 	}
 ```
 
-Client.CreateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
 Client.ReadSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
+
 Client.ReadTestEnvironment(environment *Environment, test *Test) (*Environment, error)
+
 Client.UpdateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
+
 Client.UpdateTestEnvironment(environment *Environment, test *Test) (*Environment, error)
 
 #### Test
@@ -116,7 +118,9 @@ Client.CreateTest(test *Test) (*Test, error) (*Environment, error)
 	}
 ```
 Client.ReadTest(test *Test) (*Test, error)
+
 Client.UpdateTest(test *Test) (*Test, error)
+
 Client.DeleteTest(test *Test) error
 
 #### Test step
@@ -138,7 +142,9 @@ Client.CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*Tes
     }
 ```
 Client.ReadTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+
 Client.UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+
 Client.DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error
 
 ## Developing
