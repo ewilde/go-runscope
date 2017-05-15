@@ -25,6 +25,7 @@ func TestCreateTestStep(t *testing.T) {
 	step := NewTestStep();
 	step.StepType = "request"
 	step.URL = "http://example.com"
+	step.Method = "GET"
 	step.Assertions = [] Assertion {{
 		Source: "response_status",
 		Comparison : "equal_number",

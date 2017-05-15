@@ -64,9 +64,10 @@ type TestStep struct {
 	Body       string                 `json:"body,omitempty"`
 	Note       string                 `json:"note,omitempty"`
 	Headers    map[string][]string    `json:"headers,omitempty"`
-	RequestId  string                 `json:"request_id,omitempty"`
+	RequestID  string                 `json:"request_id,omitempty"`
 	Assertions []Assertion            `json:"assertions,omitempty"`
 	Scripts    []Script               `json:"scripts,omitempty"`
+	Method     string                 `json:"method,omitempty"`
 }
 
 // Variable allow you to extract data from request, subtest, and Ghost Inspector steps for use in subsequent steps in the test. Similar to Assertions, each variable is defined by a name, source, and property. See https://www.runscope.com/docs/api/steps#variables
@@ -76,11 +77,12 @@ type Variable struct {
 	Source   string `json:"source,omitempty"`
 }
 
-// Assertion, an assertion comparison to determine whether or not to execute the embedded steps. See https://www.runscope.com/docs/api/steps#assertions
+// Assertion  allow you to specify success criteria for a given request, Ghost Inspector, subtest, or condition step. Each assertion is defined by a source, property, comparison, and value. See https://www.runscope.com/docs/api/steps#assertions
 type Assertion struct {
 	Comparison string      `json:"comparison,omitempty"`
 	Value      interface{} `json:"value,omitempty"`
 	Source     string      `json:"source,omitempty"`
+	Property   string      `json:"property,omitempty"`
 }
 
 type Script struct {

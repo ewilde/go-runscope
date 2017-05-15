@@ -366,7 +366,7 @@ func TestReadFromResponse(t *testing.T) {
 		t.Errorf("Expected authorization header %s, actual %s", "bearer {{token}}", header[0])
 	}
 
-	if step.RequestId != "2dbfb5d2-3b5a-499c-9550-b06f9a475feb" {
+	if step.RequestID != "2dbfb5d2-3b5a-499c-9550-b06f9a475feb" {
 		t.Errorf("Expected step request id %s, actual %s",  "2dbfb5d2-3b5a-499c-9550-b06f9a475feb", step.StepType)
 	}
 

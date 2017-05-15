@@ -38,7 +38,7 @@ func TestDeserializeResult(t *testing.T) {
 		t.Error(err)
 	}
 
-	if response.Data["key"] != "6t0sd3euxlwa" {
+	if response.Data.(map[string]interface{})["key"] != "6t0sd3euxlwa" {
 		t.Error("Key not deserialized")
 	}
 }

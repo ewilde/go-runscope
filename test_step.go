@@ -2,20 +2,22 @@ package runscope
 
 import "fmt"
 
-// NewTest creates a new test struct
+// NewTestStep creates a new test step struct
 func NewTestStep() *TestStep {
 	return &TestStep {}
 }
 
-// CreateTest creates a new runscope test step. See https://www.runscope.com/docs/api/steps#add
-func (client *Client) CreateTestStep(testStep *TestStep, bucketKey string, testId string) (*TestStep, error) {
+// CreateTestStep creates a new runscope test step. See https://www.runscope.com/docs/api/steps#add
+func (client *Client) CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error) {
 	newResource, error := client.createResource(testStep, "testStep", testStep.ID,
-		fmt.Sprintf("/buckets/%s/tests/%s/steps", bucketKey, testId))
+		fmt.Sprintf("/buckets/%s/tests/%s/steps", bucketKey, testID))
 	if error != nil {
 		return nil, error
 	}
 
-	newTestStep, error := getTestStepFromResponse(newResource.Data)
+	steps := newResource.Data.([]interface{})
+	step := steps[len(steps) - 1].(map[string]interface{})
+	newTestStep, error := getTestStepFromResponse(step)
 	if error != nil {
 		return nil, error
 	}
@@ -23,10 +25,10 @@ func (client *Client) CreateTestStep(testStep *TestStep, bucketKey string, testI
 	return newTestStep, nil
 }
 
-// ReadTest list details about an existing test. See https://www.runscope.com/docs/api/tests#detail
-func (client *Client) ReadTestStep(testStep *TestStep, bucketKey string, testId string) (*TestStep, error) {
+// ReadTestStep list details about an existing test step. https://www.runscope.com/docs/api/steps#detail
+func (client *Client) ReadTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error) {
 	resource, error := client.readResource("testStep", testStep.ID,
-		fmt.Sprintf("/buckets/%s/tests/%s/steps/%s", bucketKey, testId, testStep.ID))
+		fmt.Sprintf("/buckets/%s/tests/%s/steps/%s", bucketKey, testID, testStep.ID))
 	if error != nil {
 		return nil, error
 	}
@@ -39,10 +41,10 @@ func (client *Client) ReadTestStep(testStep *TestStep, bucketKey string, testId 
 	return readTestStep, nil
 }
 
-// UpdateTest update an existing test. See https://www.runscope.com/docs/api/tests#modifying
-func (client *Client) UpdateTestStep(testStep *TestStep, bucketKey string, testId string) (*TestStep, error) {
+// UpdateTestStep updates an existing test step. https://www.runscope.com/docs/api/steps#modify
+func (client *Client) UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error) {
 	resource, error := client.updateResource(testStep, "testStep", testStep.ID,
-		fmt.Sprintf("/buckets/%s/tests/%s/steps/%s", bucketKey, testId, testStep.ID))
+		fmt.Sprintf("/buckets/%s/tests/%s/steps/%s", bucketKey, testID, testStep.ID))
 	if error != nil {
 		return nil, error
 	}
@@ -55,10 +57,10 @@ func (client *Client) UpdateTestStep(testStep *TestStep, bucketKey string, testI
 	return readTestStep, nil
 }
 
-// DeleteTest delete an existing test. See https://www.runscope.com/docs/api/tests#delete
-func (client *Client) DeleteTestStep(testStep *TestStep, bucketKey string, testId string) error {
+// DeleteTestStep delete an existing test step. https://www.runscope.com/docs/api/steps#delete
+func (client *Client) DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error {
 	return client.deleteResource("testStep", testStep.ID,
-		fmt.Sprintf("/buckets/%s/tests/%s/steps/%s", bucketKey, testId, testStep.ID))
+		fmt.Sprintf("/buckets/%s/tests/%s/steps/%s", bucketKey, testID, testStep.ID))
 }
 
 func getTestStepFromResponse(response interface{}) (*TestStep, error) {

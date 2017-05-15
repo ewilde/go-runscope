@@ -32,14 +32,8 @@ type Team struct {
 
 type response struct {
 	Meta  metaResponse           `json:"meta"`
-	Data  map[string]interface{} `json:"data"`
+	Data  interface{}            `json:"data"`
 	Error errorResponse          `json:"error"`
-}
-
-type collectionResponse struct {
-	Meta  metaResponse  `json:"meta"`
-	Data  []interface{} `json:"data"`
-	Error errorResponse `json:"error"`
 }
 
 type errorResponse struct {
