@@ -155,6 +155,26 @@ Client.UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*Tes
 
 Client.DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error
 ```
+#### Schedule
+```go
+Client.CreateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
+...
+    schedule := NewSchedule()
+    schedule.Note = "Daily schedule"
+    schedule.Interval = "1d"
+    schedule.EnvironmentID = environment.ID
+
+    schedule, err = client.CreateSchedule(schedule, bucket.Key, test.ID)
+    if err != nil {
+        t.Error(err)
+    }
+
+Client.ReadSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
+
+Client.UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
+
+Client.DeleteSchedule(schedule *Schedule, bucketKey string, testID string) error
+```
 ## Developing
 ### Running the tests
 By default the tests requiring access to the runscope api (most of them)
