@@ -17,7 +17,7 @@ func NewSchedule() *Schedule {
 
 // CreateSchedule creates a new test schedule. See https://www.runscope.com/docs/api/schedules#create
 func (client *Client) CreateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error) {
-	newResource, error := client.createResource(schedule, "Schedule", schedule.Note,
+	newResource, error := client.createResource(schedule, "schedule", schedule.Note,
 		fmt.Sprintf("/buckets/%s/tests/%s/schedules", bucketKey, testID))
 	if error != nil {
 		return nil, error
@@ -33,8 +33,8 @@ func (client *Client) CreateSchedule(schedule *Schedule, bucketKey string, testI
 
 // ReadSchedule list details about an existing test schedule. See https://www.runscope.com/docs/api/schedules#detail
 func (client *Client) ReadSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error) {
-	resource, error := client.readResource("Schedule", schedule.ID,
-		fmt.Sprintf("/buckets/%s/tests/%s/schedule/%s", bucketKey, testID, schedule.ID))
+	resource, error := client.readResource("schedule", schedule.ID,
+		fmt.Sprintf("/buckets/%s/tests/%s/schedules/%s", bucketKey, testID, schedule.ID))
 	if error != nil {
 		return nil, error
 	}
@@ -49,8 +49,8 @@ func (client *Client) ReadSchedule(schedule *Schedule, bucketKey string, testID 
 
 // UpdateSchedule updates an existing test schedule. See https://www.runscope.com/docs/api/schedules#modify
 func (client *Client) UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error) {
-	resource, error := client.updateResource(schedule, "Schedule", schedule.ID,
-		fmt.Sprintf("/buckets/%s/tests/%s/schedule/%s", bucketKey, testID, schedule.ID))
+	resource, error := client.updateResource(schedule, "schedule", schedule.ID,
+		fmt.Sprintf("/buckets/%s/tests/%s/schedules/%s", bucketKey, testID, schedule.ID))
 	if error != nil {
 		return nil, error
 	}
@@ -65,8 +65,8 @@ func (client *Client) UpdateSchedule(schedule *Schedule, bucketKey string, testI
 
 // DeleteSchedule delete an existing test schedule. See https://www.runscope.com/docs/api/schedules#delete
 func (client *Client) DeleteSchedule(schedule *Schedule, bucketKey string, testID string) error {
-	return client.deleteResource("Schedule", schedule.ID,
-		fmt.Sprintf("/buckets/%s/tests/%s/schedule/%s", bucketKey, testID, schedule.ID))
+	return client.deleteResource("schedule", schedule.ID,
+		fmt.Sprintf("/buckets/%s/tests/%s/schedules/%s", bucketKey, testID, schedule.ID))
 }
 
 func getScheduleFromResponse(response interface{}) (*Schedule, error) {

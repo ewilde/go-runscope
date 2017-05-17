@@ -9,7 +9,7 @@ func NewTestStep() *TestStep {
 
 // CreateTestStep creates a new runscope test step. See https://www.runscope.com/docs/api/steps#add
 func (client *Client) CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error) {
-	newResource, error := client.createResource(testStep, "testStep", testStep.ID,
+	newResource, error := client.createResource(testStep, "test step", testStep.ID,
 		fmt.Sprintf("/buckets/%s/tests/%s/steps", bucketKey, testID))
 	if error != nil {
 		return nil, error
@@ -27,7 +27,7 @@ func (client *Client) CreateTestStep(testStep *TestStep, bucketKey string, testI
 
 // ReadTestStep list details about an existing test step. https://www.runscope.com/docs/api/steps#detail
 func (client *Client) ReadTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error) {
-	resource, error := client.readResource("testStep", testStep.ID,
+	resource, error := client.readResource("test step", testStep.ID,
 		fmt.Sprintf("/buckets/%s/tests/%s/steps/%s", bucketKey, testID, testStep.ID))
 	if error != nil {
 		return nil, error
@@ -43,7 +43,7 @@ func (client *Client) ReadTestStep(testStep *TestStep, bucketKey string, testID 
 
 // UpdateTestStep updates an existing test step. https://www.runscope.com/docs/api/steps#modify
 func (client *Client) UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error) {
-	resource, error := client.updateResource(testStep, "testStep", testStep.ID,
+	resource, error := client.updateResource(testStep, "test step", testStep.ID,
 		fmt.Sprintf("/buckets/%s/tests/%s/steps/%s", bucketKey, testID, testStep.ID))
 	if error != nil {
 		return nil, error
@@ -59,7 +59,7 @@ func (client *Client) UpdateTestStep(testStep *TestStep, bucketKey string, testI
 
 // DeleteTestStep delete an existing test step. https://www.runscope.com/docs/api/steps#delete
 func (client *Client) DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error {
-	return client.deleteResource("testStep", testStep.ID,
+	return client.deleteResource("test step", testStep.ID,
 		fmt.Sprintf("/buckets/%s/tests/%s/steps/%s", bucketKey, testID, testStep.ID))
 }
 

@@ -107,6 +107,7 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 		return response, err
 	}
 
+	log.Printf("[DEBUG] 	request: GET %s", endpoint)
 	resp, err := client.HTTP.Do(req)
 	if err != nil {
 		return response, err
@@ -115,7 +116,7 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
-	log.Printf("[DEBUG] 	%d %s", resp.StatusCode, bodyString)
+	log.Printf("[DEBUG] 	response: %d %s", resp.StatusCode, bodyString)
 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
