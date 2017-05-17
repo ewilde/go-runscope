@@ -77,8 +77,9 @@ Client.DeleteBucket(key string)
 ```
 
 #### Environment
-Client.CreateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
 ```go
+Client.CreateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
+...
 environment := &runscope.Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
@@ -97,10 +98,10 @@ environment := &runscope.Environment{
 		},
 	}
 
-	environment, err := client.CreateSharedEnvironment(environment, createBucket())
-	if err != nil {
-		log.Printf("[ERROR] error creating environment: %s", err)
-	}
+environment, err := client.CreateSharedEnvironment(environment, createBucket())
+if err != nil {
+    log.Printf("[ERROR] error creating environment: %s", err)
+}
 ```
 
 ```go
