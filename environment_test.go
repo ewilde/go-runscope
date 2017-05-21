@@ -71,7 +71,7 @@ func TestCreateTestEnvironment(t *testing.T) {
 	environment := &Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
-			"VarA" : "ValB",
+			"VarA" : "ValA",
 			"VarB" : "ValB",
 		},
 		Integrations: []*Integration{
@@ -99,6 +99,14 @@ func TestCreateTestEnvironment(t *testing.T) {
 
 	if len(environment.InitialVariables) != 2 {
 		t.Errorf("Expected %d initial variables got %d", 2, len(environment.InitialVariables))
+	}
+
+	if varAVal, ok := environment.InitialVariables["VarA"]; !ok || varAVal != "ValA" {
+		t.Errorf("Expected variable VarA got %#v", environment.InitialVariables)
+	}
+
+	if len(environment.Integrations) != 2 {
+		t.Errorf("Expected %d integrations got %d", 2, len(environment.Integrations))
 	}
 }
 
