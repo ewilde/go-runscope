@@ -11,7 +11,7 @@ func createSharedEnvironment() {
 			"VarA" : "ValB",
 			"VarB" : "ValB",
 		},
-		Integrations: []*runscope.Integration {
+		Integrations: []*runscope.EnvironmentIntegration{
 			{
 				ID:              "27e48b0d-ba8e-4fe0-bcaa-dd9de08dc47d",
 				IntegrationType: "pagerduty",

@@ -23,7 +23,7 @@ func TestCreateEnvironment(t *testing.T) {
 			"VarA" : "ValB",
 			"VarB" : "ValB",
 		},
-		Integrations: []*Integration {
+		Integrations: []*EnvironmentIntegration{
 			{
 				ID:              "27e48b0d-ba8e-4fe0-bcaa-dd9de08dc47d",
 				IntegrationType: "pagerduty",
@@ -67,21 +67,24 @@ func TestCreateTestEnvironment(t *testing.T) {
 	}
 
 	defer client.DeleteTest(test)
+	integrations, _ := client.ListIntegrations(teamID)
+	pagerDuty := Choose(integrations, func(item *Integration) bool {
+		if item.IntegrationType == "pagerduty" {
+			return true
+		}
 
+		return false
+	})
 	environment := &Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
 			"VarA" : "ValA",
 			"VarB" : "ValB",
 		},
-		Integrations: []*Integration{
+		Integrations: []*EnvironmentIntegration{
 			{
-				ID:              "27e48b0d-ba8e-4fe0-bcaa-dd9de08dc47d",
+				ID:              pagerDuty[0].ID,
 				IntegrationType: "pagerduty",
-			},
-			{
-				ID:              "574f4560-0f50-41da-a2f7-bdce419ad378",
-				IntegrationType: "slack",
 			},
 		},
 	}
@@ -105,8 +108,17 @@ func TestCreateTestEnvironment(t *testing.T) {
 		t.Errorf("Expected variable VarA got %#v", environment.InitialVariables)
 	}
 
-	if len(environment.Integrations) != 2 {
-		t.Errorf("Expected %d integrations got %d", 2, len(environment.Integrations))
+	if len(environment.Integrations) != 1 {
+		t.Errorf("Expected %d integrations got %d", 1, len(environment.Integrations))
+	}
+
+	integration := environment.Integrations[0]
+	if len(integration.ID) == 0 {
+		t.Error("Integration id should not be empty")
+	}
+
+	if integration.IntegrationType != "pagerduty" {
+		t.Errorf("Expected integration type %s got %s", "pagerduty", integration.IntegrationType)
 	}
 }
 

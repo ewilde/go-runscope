@@ -8,22 +8,22 @@ import (
 
 // Environment stores details for shared and test-specific environments. See https://www.runscope.com/docs/api/environments
 type Environment struct {
-	ID                  string             `json:"id,omitempty"`
-	Name                string             `json:"name,omitempty"`
-	Script              string             `json:"script,omitempty"`
-	PreserveCookies     bool               `json:"preserve_cookies,omitempty"`
-        TestID              string             `json:"test_id,omitempty"`
-        InitialVariables    map[string]string  `json:"initial_variables,omitempty"`
-        Integrations        []*Integration     `json:"integrations,omitempty"`
-	Regions             []string           `json:"regions,omitempty"`
-	VerifySsl           bool               `json:"verify_ssl,omitempty"`
-	ExportedAt          *time.Time         `json:"exported_at,omitempty"`
-	RetryOnFailure      bool               `json:"retry_on_failure,omitempty"`
-	RemoteAgents        []*LocalMachine    `json:"remote_agents,omitempty"`
-	WebHooks            []string           `json:"webhooks,omitempty"`
-	ParentEnvironmentID string             `json:"parent_environment_id,omitempty"`
-	EmailSettings       *EmailSettings     `json:"emails,omitempty"`
-	ClientCertificate   string             `json:"client_certificate,omitempty"`
+	ID                  string                    `json:"id,omitempty"`
+	Name                string                    `json:"name,omitempty"`
+	Script              string                    `json:"script,omitempty"`
+	PreserveCookies     bool                      `json:"preserve_cookies,omitempty"`
+        TestID              string                    `json:"test_id,omitempty"`
+        InitialVariables    map[string]string         `json:"initial_variables,omitempty"`
+        Integrations        []*EnvironmentIntegration `json:"integrations,omitempty"`
+	Regions             []string                  `json:"regions,omitempty"`
+	VerifySsl           bool                      `json:"verify_ssl,omitempty"`
+	ExportedAt          *time.Time                `json:"exported_at,omitempty"`
+	RetryOnFailure      bool                      `json:"retry_on_failure,omitempty"`
+	RemoteAgents        []*LocalMachine           `json:"remote_agents,omitempty"`
+	WebHooks            []string                  `json:"webhooks,omitempty"`
+	ParentEnvironmentID string                    `json:"parent_environment_id,omitempty"`
+	EmailSettings       *EmailSettings            `json:"emails,omitempty"`
+	ClientCertificate   string                    `json:"client_certificate,omitempty"`
 }
 
 // EmailSettings determining how test failures trigger notifications
@@ -34,8 +34,8 @@ type EmailSettings struct {
 	Recipients      []*Contact `json:"recipients,omitempty"`
 }
 
-// Integration represents an integration with a third-party. See https://www.runscope.com/docs/api/integrations
-type Integration struct {
+// EnvironmentIntegration represents an integration with a third-party. See https://www.runscope.com/docs/api/integrations
+type EnvironmentIntegration struct {
 	ID              string `json:"id"`
 	IntegrationType string `json:"integration_type"`
 	Description     string `json:"description,omitempty"`
