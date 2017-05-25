@@ -7,7 +7,7 @@ import (
 )
 
 
-func TestCreateEnvironment(t *testing.T) {
+func TestCreateSharedEnvironment(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
@@ -25,11 +25,11 @@ func TestCreateEnvironment(t *testing.T) {
 		},
 		Integrations: []*EnvironmentIntegration{
 			{
-				ID:              "27e48b0d-ba8e-4fe0-bcaa-dd9de08dc47d",
+				ID:              "50b7233c-9b9e-488d-989d-85f511ee47d5",
 				IntegrationType: "pagerduty",
 			},
 			{
-				ID:              "574f4560-0f50-41da-a2f7-bdce419ad378",
+				ID:              "da309804-b6d5-4219-8232-8414bf442f05",
 				IntegrationType: "slack",
 			},
 		 },
@@ -48,6 +48,19 @@ func TestCreateEnvironment(t *testing.T) {
 
 	if len(environment.InitialVariables) != 2 {
 		t.Errorf("Expected %d initial variables got %d", 2, len(environment.InitialVariables))
+	}
+
+	if len(environment.Integrations) != 2 {
+		t.Errorf("Expected %d integrations got %d", 1, len(environment.Integrations))
+	}
+
+	integration := environment.Integrations[0]
+	if len(integration.ID) == 0 {
+		t.Error("Integration id should not be empty")
+	}
+
+	if integration.IntegrationType != "pagerduty" {
+		t.Errorf("Expected integration type %s got %s", "pagerduty", integration.IntegrationType)
 	}
 }
 

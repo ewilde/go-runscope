@@ -12,9 +12,9 @@ type Environment struct {
 	Name                string                    `json:"name,omitempty"`
 	Script              string                    `json:"script,omitempty"`
 	PreserveCookies     bool                      `json:"preserve_cookies,omitempty"`
-        TestID              string                    `json:"test_id,omitempty"`
-        InitialVariables    map[string]string         `json:"initial_variables,omitempty"`
-        Integrations        []*EnvironmentIntegration `json:"integrations,omitempty"`
+	TestID              string                    `json:"test_id,omitempty"`
+	InitialVariables    map[string]string         `json:"initial_variables,omitempty"`
+	Integrations        []*EnvironmentIntegration `json:"integrations,omitempty"`
 	Regions             []string                  `json:"regions,omitempty"`
 	VerifySsl           bool                      `json:"verify_ssl,omitempty"`
 	ExportedAt          *time.Time                `json:"exported_at,omitempty"`

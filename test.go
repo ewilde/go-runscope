@@ -53,7 +53,7 @@ type TestRun struct {
 	Region              string     `json:"region,omitempty"`
 }
 
-// TestStep represents each step that makes up part of the test
+// TestStep represents each step that makes up part of the test. See https://www.runscope.com/docs/api/steps
 type TestStep struct {
 	URL        string                 `json:"url,omitempty"`
 	Variables  []*Variable            `json:"variables,omitempty"`

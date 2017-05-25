@@ -1,6 +1,9 @@
 package runscope
 
-import "fmt"
+import (
+	"fmt"
+	"errors"
+)
 
 // NewTestStep creates a new test step struct
 func NewTestStep() *TestStep {
@@ -9,6 +12,10 @@ func NewTestStep() *TestStep {
 
 // CreateTestStep creates a new runscope test step. See https://www.runscope.com/docs/api/steps#add
 func (client *Client) CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error) {
+	if error := testStep.Validate(); error != nil {
+		return nil, error
+	}
+
 	newResource, error := client.createResource(testStep, "test step", testStep.ID,
 		fmt.Sprintf("/buckets/%s/tests/%s/steps", bucketKey, testID))
 	if error != nil {
@@ -67,4 +74,23 @@ func getTestStepFromResponse(response interface{}) (*TestStep, error) {
 	testStep := new(TestStep)
 	err := decode(testStep, response)
 	return testStep, err
+}
+
+
+func (step *TestStep) Validate() error {
+	if step.StepType == "request" {
+		if err := step.validateRequestType(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (step *TestStep) validateRequestType() error {
+	if step.Method == "" {
+		return errors.New("A request test step must specify 'Method' property")
+	}
+
+	return nil
 }

@@ -192,4 +192,26 @@ func TestDeleteTestStep(t *testing.T) {
 	}
 }
 
+func TestValidationRequestTypeMissingMethod(t *testing.T) {
+
+	step := NewTestStep()
+	step.StepType = "request"
+	step.URL = "http://example.com"
+	step.Assertions = [] Assertion {{
+		Source: "response_status",
+		Comparison : "equal_number",
+		Value: 200,
+	}}
+
+	client := clientConfigure()
+	_, err := client.CreateTestStep(step, "foo", "ba")
+	if err == nil {
+		t.Error("Expected validation error for missing method")
+	}
+
+	if !strings.Contains(err.Error(), "A request test step must specify 'Method' property") {
+		t.Error("Expected validation error for missing method")
+	}
+}
+
 
