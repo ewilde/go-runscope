@@ -12,7 +12,7 @@ func NewTestStep() *TestStep {
 
 // CreateTestStep creates a new runscope test step. See https://www.runscope.com/docs/api/steps#add
 func (client *Client) CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error) {
-	if error := testStep.Validate(); error != nil {
+	if error := testStep.validate(); error != nil {
 		return nil, error
 	}
 
@@ -77,7 +77,7 @@ func getTestStepFromResponse(response interface{}) (*TestStep, error) {
 }
 
 
-func (step *TestStep) Validate() error {
+func (step *TestStep) validate() error {
 	if step.StepType == "request" {
 		if err := step.validateRequestType(); err != nil {
 			return err
@@ -90,6 +90,10 @@ func (step *TestStep) Validate() error {
 func (step *TestStep) validateRequestType() error {
 	if step.Method == "" {
 		return errors.New("A request test step must specify 'Method' property")
+	}
+
+	if step.Method == "GET" && step.Body != "" {
+		return errors.New("A request test step that specifies a 'GET' method can not include a body property")
 	}
 
 	return nil

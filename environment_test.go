@@ -81,7 +81,7 @@ func TestCreateTestEnvironment(t *testing.T) {
 
 	defer client.DeleteTest(test)
 	integrations, _ := client.ListIntegrations(teamID)
-	pagerDuty := Choose(integrations, func(item *Integration) bool {
+	pagerDuty := choose(integrations, func(item *Integration) bool {
 		if item.IntegrationType == "pagerduty" {
 			return true
 		}

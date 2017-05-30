@@ -27,7 +27,7 @@ func TestCreateTestStep(t *testing.T) {
 	step.StepType = "request"
 	step.URL = "http://example.com"
 	step.Method = "GET"
-	step.Assertions = [] Assertion {{
+	step.Assertions = [] *Assertion {{
 		Source: "response_status",
 		Comparison : "equal_number",
 		Value: 200,
@@ -66,7 +66,7 @@ func TestReadTestStep(t *testing.T) {
 	step.StepType = "request"
 	step.URL = "http://example.com"
 	step.Method = "GET"
-	step.Assertions = [] Assertion {{
+	step.Assertions = [] *Assertion {{
 		Source: "response_status",
 		Comparison : "equal_number",
 		Value: 200,
@@ -119,7 +119,7 @@ func TestUpdateTestStep(t *testing.T) {
 	step.StepType = "request"
 	step.URL = "http://example.com"
 	step.Method = "GET"
-	step.Assertions = [] Assertion {{
+	step.Assertions = [] *Assertion {{
 		Source: "response_status",
 		Comparison : "equal_number",
 		Value: 200,
@@ -166,7 +166,7 @@ func TestDeleteTestStep(t *testing.T) {
 	step.StepType = "request"
 	step.URL = "http://example.com"
 	step.Method = "GET"
-	step.Assertions = [] Assertion {{
+	step.Assertions = [] *Assertion {{
 		Source: "response_status",
 		Comparison : "equal_number",
 		Value: 200,
@@ -197,7 +197,7 @@ func TestValidationRequestTypeMissingMethod(t *testing.T) {
 	step := NewTestStep()
 	step.StepType = "request"
 	step.URL = "http://example.com"
-	step.Assertions = [] Assertion {{
+	step.Assertions = [] *Assertion {{
 		Source: "response_status",
 		Comparison : "equal_number",
 		Value: 200,
@@ -211,6 +211,30 @@ func TestValidationRequestTypeMissingMethod(t *testing.T) {
 
 	if !strings.Contains(err.Error(), "A request test step must specify 'Method' property") {
 		t.Error("Expected validation error for missing method")
+	}
+}
+
+func TestValidationRequestTypeGetIncludesBody(t *testing.T) {
+
+	step := NewTestStep()
+	step.StepType = "request"
+	step.URL = "http://example.com"
+	step.Assertions = [] *Assertion {{
+		Source: "response_status",
+		Comparison : "equal_number",
+		Value: 200,
+	}}
+	step.Method = "GET"
+	step.Body = "foo"
+
+	client := clientConfigure()
+	_, err := client.CreateTestStep(step, "foo", "ba")
+	if err == nil {
+		t.Error("Expected validation error for request with GET method including body")
+	}
+
+	if !strings.Contains(err.Error(), "A request test step that specifies a 'GET' method can not include a body property") {
+		t.Error("Expected validation error for request GET with included body")
 	}
 }
 

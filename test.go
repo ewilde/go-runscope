@@ -65,8 +65,8 @@ type TestStep struct {
 	Note       string                 `json:"note,omitempty"`
 	Headers    map[string][]string    `json:"headers,omitempty"`
 	RequestID  string                 `json:"request_id,omitempty"`
-	Assertions []Assertion            `json:"assertions,omitempty"`
-	Scripts    []Script               `json:"scripts,omitempty"`
+	Assertions []*Assertion           `json:"assertions,omitempty"`
+	Scripts    []*Script               `json:"scripts,omitempty"`
 	Method     string                 `json:"method,omitempty"`
 }
 

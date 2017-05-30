@@ -57,7 +57,7 @@ func (client *Client) ListPeople(teamID string) ([]*People, error) {
 	return people, nil
 }
 
-func Choose(items []*Integration,test func(*Integration) bool) (result []*Integration) {
+func choose(items []*Integration,test func(*Integration) bool) (result []*Integration) {
 	for _, item := range items {
 		if test(item) {
 			result = append(result, item)
@@ -66,6 +66,7 @@ func Choose(items []*Integration,test func(*Integration) bool) (result []*Integr
 
 	return
 }
+
 func getIntegrationFromResponse(response interface{}) ([]*Integration, error) {
 	var integrations []*Integration
 	err := decode(&integrations, response)
