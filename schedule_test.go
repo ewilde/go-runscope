@@ -30,7 +30,7 @@ func TestCreateSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
-	defer client.DeleteSharedEnvironment(environment, bucket)
+	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
 	schedule.Note = "Daily schedule"
@@ -73,7 +73,7 @@ func TestReadSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
-	defer client.DeleteSharedEnvironment(environment, bucket)
+	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
 	schedule.Note = "Daily schedule"
@@ -130,7 +130,7 @@ func TestUpdateSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
-	defer client.DeleteSharedEnvironment(environment, bucket)
+	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
 	schedule.Note = "Daily schedule"
@@ -181,7 +181,7 @@ func TestDeleteSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
-	defer client.DeleteSharedEnvironment(environment, bucket)
+	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
 	schedule.Note = "Daily schedule"
