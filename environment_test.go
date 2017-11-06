@@ -36,7 +36,12 @@ func TestCreateSharedEnvironment(t *testing.T) {
 	}
 
 	environment, err = client.CreateSharedEnvironment(environment, bucket)
-	defer client.DeleteSharedEnvironment(environment, bucket)
+	defer func () {
+		err := client.DeleteSharedEnvironment(environment, bucket)
+		if err != nil {
+			t.Errorf("Error deleting environment, %v", err)
+		}
+	}()
 
 	if err != nil {
 		t.Error(err)
@@ -103,7 +108,12 @@ func TestCreateTestEnvironment(t *testing.T) {
 	}
 
 	environment, err = client.CreateTestEnvironment(environment, test)
-	defer client.DeleteSharedEnvironment(environment, bucket)
+	defer func () {
+		err := client.DeleteTestEnvironment(environment, test)
+		if err != nil {
+			t.Errorf("Error deleting environment, %v", err)
+		}
+	}()
 
 	if err != nil {
 		t.Error(err)
