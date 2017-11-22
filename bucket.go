@@ -83,6 +83,7 @@ func (client *Client) DeleteBucket(key string) error {
 	return client.deleteResource("bucket", key, fmt.Sprintf("/buckets/%s", key))
 }
 
+// DeleteBuckets deletes all buckets matching the predicate
 func (client *Client) DeleteBuckets(predicate func(bucket *Bucket) bool) error {
 
 	buckets, err := client.ListBuckets()
@@ -99,7 +100,7 @@ func (client *Client) DeleteBuckets(predicate func(bucket *Bucket) bool) error {
 	return nil
 }
 
-
+// ListBuckets lists all buckets for an account
 func (client *Client) ListBuckets() ([]*Bucket, error) {
 	resource, error := client.readResource("[]bucket", "", "/buckets")
 	if error != nil {
