@@ -17,6 +17,65 @@ func TestCreateBucket(t *testing.T) {
 
 	client.DeleteBucket(bucket.Key)
 }
+func TestDeleteBuckets(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(&Bucket{Name: "test-fred", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket.Key)
+	if err != nil {
+		t.Error(err)
+	}
+
+	bucket2, err := client.CreateBucket(&Bucket{Name: "test-bob", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket2.Key)
+	if err != nil {
+		t.Error(err)
+	}
+
+	client.DeleteBuckets(func(bucket *Bucket) bool { return bucket.Name == "test-bob"})
+
+	fredBucket, err := client.ReadBucket(bucket.Key)
+	if fredBucket == nil {
+		t.Errorf("Bucket key: %v should not be deleted", bucket.Key)
+	}
+
+	bobBucket, err := client.ReadBucket(bucket2.Key)
+	if bobBucket != nil {
+		t.Errorf("Bucket key: %v should be deleted", bobBucket.Key)
+	}
+
+
+}
+
+func TestListBuckets(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket.Key)
+	if err != nil {
+		t.Error(err)
+	}
+
+	bucket2, err := client.CreateBucket(&Bucket{Name: "test2", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket2.Key)
+	if err != nil {
+		t.Error(err)
+	}
+
+	results, err := client.ListBuckets()
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	if results == nil {
+		t.Error("list buckets result cannot be nil")
+	}
+
+	if len(results) < 2 {
+		t.Errorf("Length of buckets expected more than 1, actual:%v", len(results))
+	}
+}
 
 func TestReadBucket(t *testing.T) {
 	testPreCheck(t)
