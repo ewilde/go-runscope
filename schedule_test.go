@@ -1,8 +1,8 @@
 package runscope
 
 import (
-	"testing"
 	"strings"
+	"testing"
 )
 
 func TestCreateSchedule(t *testing.T) {
@@ -26,7 +26,7 @@ func TestCreateSchedule(t *testing.T) {
 	environment := &Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
-			"VarA" : "ValB",
+			"VarA": "ValB",
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
@@ -69,7 +69,7 @@ func TestReadSchedule(t *testing.T) {
 	environment := &Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
-			"VarA" : "ValB",
+			"VarA": "ValB",
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
@@ -104,7 +104,6 @@ func TestReadSchedule(t *testing.T) {
 	}
 }
 
-
 func TestUpdateSchedule(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
@@ -126,7 +125,7 @@ func TestUpdateSchedule(t *testing.T) {
 	environment := &Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
-			"VarA" : "ValB",
+			"VarA": "ValB",
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
@@ -177,7 +176,7 @@ func TestDeleteSchedule(t *testing.T) {
 	environment := &Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
-			"VarA" : "ValB",
+			"VarA": "ValB",
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
@@ -187,7 +186,6 @@ func TestDeleteSchedule(t *testing.T) {
 	schedule.Note = "Daily schedule"
 	schedule.Interval = "1d"
 	schedule.EnvironmentID = environment.ID
-
 
 	schedule, err = client.CreateSchedule(schedule, bucket.Key, test.ID)
 	if err != nil {
@@ -208,5 +206,3 @@ func TestDeleteSchedule(t *testing.T) {
 		t.Errorf("Expected error to contain %s, actual %s", "404 NOT FOUND", err.Error())
 	}
 }
-
-

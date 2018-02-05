@@ -1,8 +1,8 @@
 package runscope
 
 import (
-	"testing"
 	"encoding/json"
+	"testing"
 	"time"
 )
 
@@ -112,7 +112,7 @@ func TestUpdateTestUsingPartiallyFilledOutObject(t *testing.T) {
 		t.Error(err)
 	}
 
-	testUpdate := &Test{ ID: test.ID, Description: "New description", Bucket: bucket}
+	testUpdate := &Test{ID: test.ID, Description: "New description", Bucket: bucket}
 	updatedTest, err := client.UpdateTest(testUpdate)
 	if err != nil {
 		t.Error(err)
@@ -122,7 +122,6 @@ func TestUpdateTestUsingPartiallyFilledOutObject(t *testing.T) {
 		t.Errorf("Expected description %s, actual %s", testUpdate.Description, updatedTest.Description)
 	}
 }
-
 
 func TestReadFromResponse(t *testing.T) {
 	responseBody := `
@@ -213,11 +212,9 @@ func TestReadFromResponse(t *testing.T) {
           }
         ],
         "scripts": [
-		{
-		    "value": "log(\"This is a sample script\");"
-		}
+		    "log(\"This is a sample script\");"
 	    ],
-        "before_scripts": [],
+        "before_scripts": ["log(\"This is a sample pre-request script\");"],
         "data": "",
         "method": "GET"
       }
@@ -278,7 +275,7 @@ func TestReadFromResponse(t *testing.T) {
 	expectedTime := time.Time{}
 	expectedTime = time.Unix(int64(1494023235), 0)
 	if !test.CreatedAt.Equal(expectedTime) {
-		t.Errorf("Expected time %s, actual %s",  expectedTime.String(), test.CreatedAt)
+		t.Errorf("Expected time %s, actual %s", expectedTime.String(), test.CreatedAt)
 	}
 
 	if test.CreatedBy.Name != "Edward Wilde" {
@@ -299,11 +296,11 @@ func TestReadFromResponse(t *testing.T) {
 
 	expectedTime = time.Unix(int64(1294023235), 0)
 	if !test.ExportedAt.Equal(expectedTime) {
-		t.Errorf("Expected time %s, actual %s",  expectedTime.String(), test.ExportedAt)
+		t.Errorf("Expected time %s, actual %s", expectedTime.String(), test.ExportedAt)
 	}
 
 	if len(test.Environments) != 1 {
-		t.Errorf("Expected %d environments, actual %d",  1, len(test.Environments))
+		t.Errorf("Expected %d environments, actual %d", 1, len(test.Environments))
 	}
 
 	if test.Environments[0].ID != "7e7afae4-23b6-492a-b4b9-75d515b5082b" {
@@ -316,50 +313,50 @@ func TestReadFromResponse(t *testing.T) {
 
 	expectedTime = time.Unix(1494623241, 385894060)
 	if !test.LastRun.FinishedAt.Equal(expectedTime) {
-		t.Errorf("Expected last run finished at time %s, actual %s",  expectedTime.String(), test.LastRun.FinishedAt)
+		t.Errorf("Expected last run finished at time %s, actual %s", expectedTime.String(), test.LastRun.FinishedAt)
 	}
 
 	if len(test.Steps) != 1 {
-		t.Errorf("Expected %d steps, actual %d",  1, len(test.Steps))
+		t.Errorf("Expected %d steps, actual %d", 1, len(test.Steps))
 	}
 
 	step := test.Steps[0]
 	if step.URL != "{{base_url}}/v1/users" {
-		t.Errorf("Expected step url %s, actual %s",  "{{base_url}}/v1/users", step.URL)
+		t.Errorf("Expected step url %s, actual %s", "{{base_url}}/v1/users", step.URL)
 	}
 
 	if len(step.Variables) != 1 {
-		t.Errorf("Expected %d variables, actual %d",  1, len(step.Variables))
+		t.Errorf("Expected %d variables, actual %d", 1, len(step.Variables))
 	}
 
 	variable := step.Variables[0]
 	if variable.Name != "source_ip" {
-		t.Errorf("Expected variable name %s, actual %s",  "source_ip", variable.Name)
+		t.Errorf("Expected variable name %s, actual %s", "source_ip", variable.Name)
 	}
 
 	if variable.Property != "origin" {
-		t.Errorf("Expected variable property %s, actual %s",  "origin", variable.Property)
+		t.Errorf("Expected variable property %s, actual %s", "origin", variable.Property)
 	}
 
 	if variable.Source != "response_json" {
-		t.Errorf("Expected variable source %s, actual %s",  "origin", variable.Source)
+		t.Errorf("Expected variable source %s, actual %s", "origin", variable.Source)
 	}
 
 	if step.StepType != "request" {
-		t.Errorf("Expected step type %s, actual %s",  "request", step.StepType)
+		t.Errorf("Expected step type %s, actual %s", "request", step.StepType)
 	}
 
 	if step.ID != "e4044178-3b78-43fd-b67c-3316bfe526a9" {
-		t.Errorf("Expected step type %s, actual %s",  "e4044178-3b78-43fd-b67c-3316bfe526a9", step.StepType)
+		t.Errorf("Expected step type %s, actual %s", "e4044178-3b78-43fd-b67c-3316bfe526a9", step.StepType)
 	}
 
 	if len(step.Headers) != 1 {
-		t.Errorf("Expected %d headers, actual %d",  1, len(step.Headers))
+		t.Errorf("Expected %d headers, actual %d", 1, len(step.Headers))
 	}
 
 	header := step.Headers["Authorization"]
 	if len(header) != 1 {
-		t.Errorf("Expected %d authorization values, actual %d",  1, len(header))
+		t.Errorf("Expected %d authorization values, actual %d", 1, len(header))
 	}
 
 	if header[0] != "bearer {{token}}" {
@@ -367,11 +364,11 @@ func TestReadFromResponse(t *testing.T) {
 	}
 
 	if step.RequestID != "2dbfb5d2-3b5a-499c-9550-b06f9a475feb" {
-		t.Errorf("Expected step request id %s, actual %s",  "2dbfb5d2-3b5a-499c-9550-b06f9a475feb", step.StepType)
+		t.Errorf("Expected step request id %s, actual %s", "2dbfb5d2-3b5a-499c-9550-b06f9a475feb", step.StepType)
 	}
 
 	if len(step.Assertions) != 1 {
-		t.Errorf("Expected %d assertions, actual %d",  1, len(step.Assertions))
+		t.Errorf("Expected %d assertions, actual %d", 1, len(step.Assertions))
 	}
 
 	assertion := step.Assertions[0]
@@ -388,12 +385,22 @@ func TestReadFromResponse(t *testing.T) {
 	}
 
 	if len(step.Scripts) != 1 {
-		t.Errorf("Expected %d scripts, actual %d",  1, len(step.Scripts))
+		t.Errorf("Expected %d scripts, actual %d", 1, len(step.Scripts))
 	}
 
 	script := step.Scripts[0]
 
-	if script.Value != "log(\"This is a sample script\");" {
-		t.Errorf("Expected script value %s, actual %s", "log(\"This is a sample script\");", script.Value)
+	if script != "log(\"This is a sample script\");" {
+		t.Errorf("Expected script value %s, actual %s", "log(\"This is a sample script\");", script)
+	}
+
+	if len(step.BeforeScripts) != 1 {
+		t.Errorf("Expected %d before scripts, actual %d", 1, len(step.Scripts))
+	}
+
+	beforeScript := step.BeforeScripts[0]
+
+	if beforeScript != "log(\"This is a sample pre-request script\");" {
+		t.Errorf("Expected script value %s, actual %s", "log(\"This is a sample pre-request script\");", beforeScript)
 	}
 }

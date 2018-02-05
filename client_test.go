@@ -2,10 +2,10 @@ package runscope
 
 import (
 	"encoding/json"
-	"os"
-	"testing"
-	"strings"
 	"log"
+	"os"
+	"strings"
+	"testing"
 )
 
 var teamID string
@@ -67,7 +67,7 @@ func testPreCheck(t *testing.T) {
 	teamID = os.Getenv("RUNSCOPE_TEAM_ID")
 }
 
-func deletePredicate (bucket *Bucket) bool {
+func deletePredicate(bucket *Bucket) bool {
 	if strings.HasPrefix(bucket.Name, "test") || strings.HasSuffix(bucket.Name, "-test") {
 		log.Printf("deleting bucket name: %s key: %s \n", bucket.Name, bucket.Key)
 		return true
