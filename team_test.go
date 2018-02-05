@@ -4,7 +4,6 @@ import (
 	"testing"
 )
 
-
 func TestListIntegration(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()

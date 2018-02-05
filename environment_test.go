@@ -1,11 +1,10 @@
 package runscope
 
 import (
-	"testing"
 	"encoding/json"
+	"testing"
 	"time"
 )
-
 
 func TestCreateSharedEnvironment(t *testing.T) {
 	testPreCheck(t)
@@ -20,8 +19,8 @@ func TestCreateSharedEnvironment(t *testing.T) {
 	environment := &Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
-			"VarA" : "ValB",
-			"VarB" : "ValB",
+			"VarA": "ValB",
+			"VarB": "ValB",
 		},
 		Integrations: []*EnvironmentIntegration{
 			{
@@ -32,11 +31,11 @@ func TestCreateSharedEnvironment(t *testing.T) {
 				ID:              "da309804-b6d5-4219-8232-8414bf442f05",
 				IntegrationType: "slack",
 			},
-		 },
+		},
 	}
 
 	environment, err = client.CreateSharedEnvironment(environment, bucket)
-	defer func () {
+	defer func() {
 		err := client.DeleteEnvironment(environment, bucket)
 		if err != nil {
 			t.Errorf("Error deleting environment, %v", err)
@@ -96,8 +95,8 @@ func TestCreateTestEnvironment(t *testing.T) {
 	environment := &Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
-			"VarA" : "ValA",
-			"VarB" : "ValB",
+			"VarA": "ValA",
+			"VarB": "ValB",
 		},
 		Integrations: []*EnvironmentIntegration{
 			{
@@ -108,7 +107,7 @@ func TestCreateTestEnvironment(t *testing.T) {
 	}
 
 	environment, err = client.CreateTestEnvironment(environment, test)
-	defer func () {
+	defer func() {
 		err := client.DeleteEnvironment(environment, bucket)
 		if err != nil {
 			t.Errorf("Error deleting environment, %v", err)
@@ -172,21 +171,21 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 		t.Errorf("Expected test id %s, actual %s", "a10c97e6-2024-41ca-990d-5e0b5f751734", environment.Script)
 	}
 
-	if len (environment.InitialVariables) != 2 {
+	if len(environment.InitialVariables) != 2 {
 		t.Errorf("Expected %d initial variables, actual %d", 2, len(environment.InitialVariables))
 	}
 
 	if environment.InitialVariables["NameB"] != "ValueB" {
-		t.Errorf("Expected initial variable value %s, actual %s", "ValueB", environment.InitialVariables["NameB"] )
+		t.Errorf("Expected initial variable value %s, actual %s", "ValueB", environment.InitialVariables["NameB"])
 	}
 
-	if len (environment.Integrations) != 2 {
+	if len(environment.Integrations) != 2 {
 		t.Errorf("Expected %d integrations, actual %d", 2, len(environment.Integrations))
 	}
 
 	if environment.Integrations[1].ID != "1b766ead-b3d1-456f-a350-83845a428ed1" ||
-	   environment.Integrations[1].Description != "PagerDuty: Runscope Service" ||
-	   environment.Integrations[1].IntegrationType != "pagerduty" {
+		environment.Integrations[1].Description != "PagerDuty: Runscope Service" ||
+		environment.Integrations[1].IntegrationType != "pagerduty" {
 		t.Errorf("Expected integration not correct got #%v", environment.Integrations[1])
 	}
 
@@ -194,7 +193,7 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 		t.Errorf("Expected id %s, actual %s", "c392d38e-70df-4181-abe5-51864ccf8f23", environment.ID)
 	}
 
-	if len (environment.Regions) != 2 {
+	if len(environment.Regions) != 2 {
 		t.Errorf("Expected %d regions, actual %d", 2, len(environment.Regions))
 	}
 
@@ -205,20 +204,20 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 	expectedTime := time.Time{}
 	expectedTime = time.Unix(int64(1494190571), 0)
 	if !environment.ExportedAt.Equal(expectedTime) {
-		t.Errorf("Expected exported at %s, actual %s",  expectedTime.String(), environment.ExportedAt)
+		t.Errorf("Expected exported at %s, actual %s", expectedTime.String(), environment.ExportedAt)
 	}
 
 	if !environment.RetryOnFailure {
 		t.Errorf("Expected retry on failures %t, actual %t", true, environment.RetryOnFailure)
 	}
 
-	if len (environment.RemoteAgents) != 1 ||
+	if len(environment.RemoteAgents) != 1 ||
 		environment.RemoteAgents[0].Name != "my-local-machine.runscope.com" ||
 		environment.RemoteAgents[0].UUID != "141d4dbc-1e41-401e-8067-6df18501e9ed" {
 		t.Errorf("Expected remote agent not correct got #%v", environment.RemoteAgents[0])
 	}
 
-	if len (environment.WebHooks) != 2 ||
+	if len(environment.WebHooks) != 2 ||
 		environment.WebHooks[1] != "https://yourapihere.com/post" {
 		t.Errorf("Expected web hooks are not correct got #%v", environment.WebHooks)
 	}
@@ -230,7 +229,7 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 	if !environment.EmailSettings.NotifyAll ||
 		environment.EmailSettings.NotifyOn != "all" ||
 		environment.EmailSettings.NotifyThreshold != 4 ||
-		len (environment.EmailSettings.Recipients) != 1 ||
+		len(environment.EmailSettings.Recipients) != 1 ||
 		environment.EmailSettings.Recipients[0].ID != "4ee15ecc-7fe1-43cb-aa12-ef50420f2cf9" {
 		t.Errorf("Expected email settings not correct got #%v", environment.EmailSettings)
 	}

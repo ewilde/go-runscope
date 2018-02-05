@@ -1,9 +1,9 @@
 package examples
 
 import (
+	"fmt"
 	"github.com/ewilde/go-runscope"
 	"log"
-	"fmt"
 )
 
 var accessToken = "{your token}"  // See https://www.runscope.com/applications

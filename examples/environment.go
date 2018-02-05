@@ -1,15 +1,16 @@
 package examples
+
 import (
-	"log"
 	"github.com/ewilde/go-runscope"
+	"log"
 )
 
 func createSharedEnvironment() {
 	environment := &runscope.Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
-			"VarA" : "ValB",
-			"VarB" : "ValB",
+			"VarA": "ValB",
+			"VarB": "ValB",
 		},
 		Integrations: []*runscope.EnvironmentIntegration{
 			{

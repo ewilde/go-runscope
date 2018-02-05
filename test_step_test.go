@@ -1,8 +1,8 @@
 package runscope
 
 import (
-	"testing"
 	"strings"
+	"testing"
 )
 
 func TestCreateTestStep(t *testing.T) {
@@ -27,10 +27,10 @@ func TestCreateTestStep(t *testing.T) {
 	step.StepType = "request"
 	step.URL = "http://example.com"
 	step.Method = "GET"
-	step.Assertions = [] *Assertion {{
-		Source: "response_status",
-		Comparison : "equal_number",
-		Value: 200,
+	step.Assertions = []*Assertion{{
+		Source:     "response_status",
+		Comparison: "equal_number",
+		Value:      200,
 	}}
 
 	step, err = client.CreateTestStep(step, bucket.Key, test.ID)
@@ -63,13 +63,15 @@ func TestReadTestStep(t *testing.T) {
 	}
 
 	step := NewTestStep()
+	step.Scripts = []string{"log(\"This is a sample post-request script\");"}
+	step.BeforeScripts = []string{"log(\"This is a sample pre-request script\");"}
 	step.StepType = "request"
 	step.URL = "http://example.com"
 	step.Method = "GET"
-	step.Assertions = [] *Assertion {{
-		Source: "response_status",
-		Comparison : "equal_number",
-		Value: 200,
+	step.Assertions = []*Assertion{{
+		Source:     "response_status",
+		Comparison: "equal_number",
+		Value:      200,
 	}}
 
 	step, err = client.CreateTestStep(step, bucket.Key, test.ID)
@@ -94,8 +96,15 @@ func TestReadTestStep(t *testing.T) {
 	if readStep.Method != step.Method {
 		t.Errorf("Expected step method %s, actual %s", step.Method, readStep.Method)
 	}
-}
 
+	if readStep.BeforeScripts[0] != step.BeforeScripts[0] {
+		t.Errorf("Expected before script %s, actual %s", step.BeforeScripts[0], readStep.BeforeScripts[0])
+	}
+
+	if readStep.Scripts[0] != step.Scripts[0] {
+		t.Errorf("Expected script %s, actual %s", step.Scripts[0], readStep.Scripts[0])
+	}
+}
 
 func TestUpdateTestStep(t *testing.T) {
 	testPreCheck(t)
@@ -119,10 +128,10 @@ func TestUpdateTestStep(t *testing.T) {
 	step.StepType = "request"
 	step.URL = "http://example.com"
 	step.Method = "GET"
-	step.Assertions = [] *Assertion {{
-		Source: "response_status",
-		Comparison : "equal_number",
-		Value: 200,
+	step.Assertions = []*Assertion{{
+		Source:     "response_status",
+		Comparison: "equal_number",
+		Value:      200,
 	}}
 
 	step, err = client.CreateTestStep(step, bucket.Key, test.ID)
@@ -166,10 +175,10 @@ func TestDeleteTestStep(t *testing.T) {
 	step.StepType = "request"
 	step.URL = "http://example.com"
 	step.Method = "GET"
-	step.Assertions = [] *Assertion {{
-		Source: "response_status",
-		Comparison : "equal_number",
-		Value: 200,
+	step.Assertions = []*Assertion{{
+		Source:     "response_status",
+		Comparison: "equal_number",
+		Value:      200,
 	}}
 
 	step, err = client.CreateTestStep(step, bucket.Key, test.ID)
@@ -197,10 +206,10 @@ func TestValidationRequestTypeMissingMethod(t *testing.T) {
 	step := NewTestStep()
 	step.StepType = "request"
 	step.URL = "http://example.com"
-	step.Assertions = [] *Assertion {{
-		Source: "response_status",
-		Comparison : "equal_number",
-		Value: 200,
+	step.Assertions = []*Assertion{{
+		Source:     "response_status",
+		Comparison: "equal_number",
+		Value:      200,
 	}}
 
 	client := clientConfigure()
@@ -219,10 +228,10 @@ func TestValidationRequestTypeGetIncludesBody(t *testing.T) {
 	step := NewTestStep()
 	step.StepType = "request"
 	step.URL = "http://example.com"
-	step.Assertions = [] *Assertion {{
-		Source: "response_status",
-		Comparison : "equal_number",
-		Value: 200,
+	step.Assertions = []*Assertion{{
+		Source:     "response_status",
+		Comparison: "equal_number",
+		Value:      200,
 	}}
 	step.Method = "GET"
 	step.Body = "foo"
@@ -237,5 +246,3 @@ func TestValidationRequestTypeGetIncludesBody(t *testing.T) {
 		t.Error("Expected validation error for request GET with included body")
 	}
 }
-
-

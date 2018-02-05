@@ -1,9 +1,9 @@
 package runscope
 
 import (
-	"testing"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"testing"
 )
 
 func TestCreateBucket(t *testing.T) {
@@ -32,7 +32,7 @@ func TestDeleteBuckets(t *testing.T) {
 		t.Error(err)
 	}
 
-	client.DeleteBuckets(func(bucket *Bucket) bool { return bucket.Name == "test-bob"})
+	client.DeleteBuckets(func(bucket *Bucket) bool { return bucket.Name == "test-bob" })
 
 	fredBucket, err := client.ReadBucket(bucket.Key)
 	if fredBucket == nil {
@@ -43,7 +43,6 @@ func TestDeleteBuckets(t *testing.T) {
 	if bobBucket != nil {
 		t.Errorf("Bucket key: %v should be deleted", bobBucket.Key)
 	}
-
 
 }
 
@@ -102,7 +101,6 @@ func TestReadBucket(t *testing.T) {
 
 	client.DeleteBucket(createdBucket.Key)
 }
-
 
 func TestBucketReadFromResponse(t *testing.T) {
 	responseBody := `
