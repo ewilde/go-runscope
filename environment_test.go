@@ -16,6 +16,15 @@ func TestCreateSharedEnvironment(t *testing.T) {
 		t.Error(err)
 	}
 
+	var integrationsAvailable []*Integration
+	if integrationsAvailable, err = client.ListIntegrations(teamID); err != nil {
+		t.Error(err)
+	}
+
+	if len(integrationsAvailable) == 0 {
+		t.Error("Expected some integrations to be available found 0 integrations.")
+	}
+
 	environment := &Environment{
 		Name: "tf_environment",
 		InitialVariables: map[string]string{
@@ -24,12 +33,8 @@ func TestCreateSharedEnvironment(t *testing.T) {
 		},
 		Integrations: []*EnvironmentIntegration{
 			{
-				ID:              "50b7233c-9b9e-488d-989d-85f511ee47d5",
-				IntegrationType: "pagerduty",
-			},
-			{
-				ID:              "da309804-b6d5-4219-8232-8414bf442f05",
-				IntegrationType: "slack",
+				ID:              integrationsAvailable[0].ID,
+				IntegrationType: integrationsAvailable[0].IntegrationType,
 			},
 		},
 	}
@@ -54,7 +59,7 @@ func TestCreateSharedEnvironment(t *testing.T) {
 		t.Errorf("Expected %d initial variables got %d", 2, len(environment.InitialVariables))
 	}
 
-	if len(environment.Integrations) != 2 {
+	if len(environment.Integrations) != 1 {
 		t.Errorf("Expected %d integrations got %d", 1, len(environment.Integrations))
 	}
 
@@ -63,8 +68,8 @@ func TestCreateSharedEnvironment(t *testing.T) {
 		t.Error("Integration id should not be empty")
 	}
 
-	if integration.IntegrationType != "pagerduty" {
-		t.Errorf("Expected integration type %s got %s", "pagerduty", integration.IntegrationType)
+	if integration.IntegrationType != integrationsAvailable[0].IntegrationType {
+		t.Errorf("Expected integration type %s got %s", integrationsAvailable[0].IntegrationType, integration.IntegrationType)
 	}
 }
 
@@ -85,8 +90,8 @@ func TestCreateTestEnvironment(t *testing.T) {
 
 	defer client.DeleteTest(test)
 	integrations, _ := client.ListIntegrations(teamID)
-	pagerDuty := choose(integrations, func(item *Integration) bool {
-		if item.IntegrationType == "pagerduty" {
+	slack := choose(integrations, func(item *Integration) bool {
+		if item.IntegrationType == "slack" {
 			return true
 		}
 
@@ -100,8 +105,8 @@ func TestCreateTestEnvironment(t *testing.T) {
 		},
 		Integrations: []*EnvironmentIntegration{
 			{
-				ID:              pagerDuty[0].ID,
-				IntegrationType: "pagerduty",
+				ID:              slack[0].ID,
+				IntegrationType: slack[0].IntegrationType,
 			},
 		},
 	}
@@ -139,8 +144,8 @@ func TestCreateTestEnvironment(t *testing.T) {
 		t.Error("Integration id should not be empty")
 	}
 
-	if integration.IntegrationType != "pagerduty" {
-		t.Errorf("Expected integration type %s got %s", "pagerduty", integration.IntegrationType)
+	if integration.IntegrationType != "slack" {
+		t.Errorf("Expected integration type %s got %s", "slack", integration.IntegrationType)
 	}
 }
 
