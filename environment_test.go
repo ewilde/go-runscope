@@ -22,7 +22,7 @@ func TestCreateSharedEnvironment(t *testing.T) {
 	}
 
 	if len(integrationsAvailable) == 0 {
-		t.Error("Expected some integrations to be available found 0 integrations.")
+		t.Error("Expected some integrations to be available found 0 integrations. Do you have at least one integration setup on your account? i.e. slack you will need at least one integration setup on your account, i.e. [slack](https://www.runscope.com/docs/api-testing/slack)")
 	}
 
 	environment := &Environment{
