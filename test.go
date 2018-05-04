@@ -133,7 +133,7 @@ func (client *Client) ReadTest(test *Test) (*Test, error) {
 	return readTest, nil
 }
 
-// ReadTests reads all tests for a bucket
+// ReadTests reads all tests for a bucket. See https://www.runscope.com/docs/api/tests#list
 func (client *Client) ReadTests(bucketKey string) ([]*Test, error) {
 	resource, error := client.readResource("test", bucketKey, fmt.Sprintf("/buckets/%s/tests", bucketKey))
 	if (error != nil) {
