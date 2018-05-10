@@ -89,7 +89,7 @@ func NewClient(apiURL string, accessToken string) *Client {
 	return &client
 }
 
-// Utilizing ClientAPI Interface
+// NewClientAPI Interface initialization
 func NewClientAPI(apiURL string, accessToken string) ClientAPI {
 	return &Client{
 		APIURL: apiURL,
