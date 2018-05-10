@@ -91,13 +91,11 @@ func NewClient(apiURL string, accessToken string) *Client {
 
 // Utilizing ClientAPI Interface
 func NewClientAPI(apiURL string, accessToken string) ClientAPI {
-	client := Client{
-		APIURL:      apiURL,
+	return &Client{
+		APIURL: apiURL,
 		AccessToken: accessToken,
-		HTTP:        cleanhttp.DefaultClient(),
+		HTTP: cleanhttp.DefaultClient(),
 	}
-
-	return &client
 }
 
 func (client *Client) createResource(
