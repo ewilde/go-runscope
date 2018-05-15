@@ -176,6 +176,35 @@ Client.UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Sch
 
 Client.DeleteSchedule(schedule *Schedule, bucketKey string, testID string) error
 ```
+### Unit Testing
+You can now mock client data:
+
+```
+type MockClient struct {
+}
+
+func (client *MockClient) ListBuckets() ([]*runscope.Bucket, error) {
+ 	bucket1 := new(runscope.Bucket)
+ 	bucket2 := new(runscope.Bucket)
+ 	bucket1.Name = "MyBucket"
+ 	bucket2.Name = "MyNonExistingBucket"
+ 	return []*runscope.Bucket{bucket1, bucket2}, nil
+ }
+ ```
+Then you can use this mockClient in your Unit Test:
+```
+func TestReadBucket(t *testing.T) {
+	t.Run("Successful return bucket", func(t *testing.T) {
+		client := new(resources.MockClient)
+		getBucket := ReadBucket("MyBucket", client)
+
+		if getBucket == nil {
+			t.Error("Should have returned a bucket")
+		}
+	})
+}
+```
+
 ## Developing
 ### Running the tests
 By default the tests requiring access to the runscope api (most of them)
