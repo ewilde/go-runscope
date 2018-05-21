@@ -37,6 +37,7 @@ func TestCreateSharedEnvironment(t *testing.T) {
 				IntegrationType: integrationsAvailable[0].IntegrationType,
 			},
 		},
+		VerifySsl: false,
 	}
 
 	environment, err = client.CreateSharedEnvironment(environment, bucket)
@@ -53,6 +54,10 @@ func TestCreateSharedEnvironment(t *testing.T) {
 
 	if len(environment.ID) == 0 {
 		t.Error("Environment id should not be empty")
+	}
+
+	if environment.VerifySsl {
+		t.Errorf("Expected environment to verify ssl to be false, was true")
 	}
 
 	if len(environment.InitialVariables) != 2 {
@@ -109,6 +114,7 @@ func TestCreateTestEnvironment(t *testing.T) {
 				IntegrationType: slack[0].IntegrationType,
 			},
 		},
+		VerifySsl: true,
 	}
 
 	environment, err = client.CreateTestEnvironment(environment, test)
@@ -146,6 +152,10 @@ func TestCreateTestEnvironment(t *testing.T) {
 
 	if integration.IntegrationType != "slack" {
 		t.Errorf("Expected integration type %s got %s", "slack", integration.IntegrationType)
+	}
+
+	if !environment.VerifySsl {
+		t.Errorf("Expected environment to verify ssl")
 	}
 }
 

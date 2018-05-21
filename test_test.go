@@ -107,7 +107,7 @@ func TestReadTests(t *testing.T) {
 	})
 
 	for i := 1; i <= 2; i++ {
-		readTest := readTests[i - 1]
+		readTest := readTests[i-1]
 		expectedTestName := fmt.Sprintf("%s%d", "tf_test", i)
 
 		if readTest.Name != expectedTestName {
