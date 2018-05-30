@@ -18,6 +18,37 @@ import (
 // APIURL is the default runscope api uri
 const APIURL = "https://api.runscope.com"
 
+// ClientAPI interface for mocking data in unit tests
+type ClientAPI interface {
+	CreateBucket(bucket *Bucket) (*Bucket, error)
+	CreateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
+	CreateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
+	CreateTest(test *Test) (*Test, error)
+	CreateTestEnvironment(environment *Environment, test *Test) (*Environment, error)
+	CreateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+	DeleteBucket(key string) error
+	DeleteBuckets(predicate func(bucket *Bucket) bool) error
+	DeleteEnvironment(environment *Environment, bucket *Bucket) error
+	DeleteSchedule(schedule *Schedule, bucketKey string, testID string) error
+	DeleteTest(test *Test) error
+	DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error
+	ListBuckets() ([]*Bucket, error)
+	ListIntegrations(teamID string) ([]*Integration, error)
+	ListPeople(teamID string) ([]*People, error)
+	ReadBucket(key string) (*Bucket, error)
+	ReadSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
+	ReadSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
+	ReadTest(test *Test) (*Test, error)
+	ReadTestEnvironment(environment *Environment, test *Test) (*Environment, error)
+	ReadTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+	ReadTests(bucketKey string) ([]*Test, error)
+	UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
+	UpdateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
+	UpdateTest(test *Test) (*Test, error)
+	UpdateTestEnvironment(environment *Environment, test *Test) (*Environment, error)
+	UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+}
+
 // Client provides access to create, read, update and delete runscope resources
 type Client struct {
 	APIURL      string
@@ -56,6 +87,15 @@ func NewClient(apiURL string, accessToken string) *Client {
 	}
 
 	return &client
+}
+
+// NewClientAPI Interface initialization
+func NewClientAPI(apiURL string, accessToken string) ClientAPI {
+	return &Client{
+		APIURL: apiURL,
+		AccessToken: accessToken,
+		HTTP: cleanhttp.DefaultClient(),
+	}
 }
 
 func (client *Client) createResource(
