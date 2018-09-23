@@ -176,6 +176,39 @@ Client.UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Sch
 
 Client.DeleteSchedule(schedule *Schedule, bucketKey string, testID string) error
 ```
+#### Test Result
+```go
+Client.ReadTestResults(bucketKey string, testID string, count uint, since time.Time, before time.Time) ([]*TestResult, error)
+...
+    var since  = time.Date("2018-09-01 00:00:00")
+    var before = time.Date("2018-09-01 00:00:30")
+	results, err := client.ReadTestResults(bucketKey, testID, 10, since, before)
+	if err != nil {
+		t.Error(err)
+	}
+
+Client.ReadTestResultsLatest(bucketKey string, testID string, count uint) ([]*TestResult, error)
+...
+	results, err := client.ReadTestResults(bucketKey, testID, 10)
+	if err != nil {
+		t.Error(err)
+	}
+
+Client.ReadTestResultDetail(bucketKey string, testID string, testRunID string) (*TestResultDetail, error
+...
+	results, err := client.ReadTestResults(bucketKey, testID, TestRunID)
+	if err != nil {
+		t.Error(err)
+	}
+
+Client.ReadTestResultDetailLatest(bucketKey string, testID string) (*TestResultDetail, error)
+...
+	results, err := client.ReadTestResultsLatest(bucketKey, testID)
+	if err != nil {
+		t.Error(err)
+	}
+
+```
 ### Unit Testing
 You can now mock client data:
 
