@@ -459,3 +459,39 @@ func TestReadFromResponse(t *testing.T) {
 		t.Errorf("Expected script value %s, actual %s", "log(\"This is a sample pre-request script\");", beforeScript)
 	}
 }
+
+func TestListsTests(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket.Key)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	newTest := &Test{Name: "tf_test1", Description: "This is a tf newTest", Bucket: bucket}
+	newTest, err = client.CreateTest(newTest)
+	defer client.DeleteTest(newTest)
+
+	newTest = &Test{Name: "tf_test2", Description: "This is a tf newTest", Bucket: bucket}
+	newTest, err = client.CreateTest(newTest)
+	defer client.DeleteTest(newTest)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	tests, err := client.ListTests(bucket.Key)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(tests) != 2 {
+		t.Errorf("Expected %d tests, actual no found %d", 2, len(tests))
+	}
+
+	if tests[0].Name != "tf_test2" {
+		t.Errorf("Expected name to be %s, found %s", "tf_test2", tests[1].Name)
+	}
+}
