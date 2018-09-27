@@ -206,3 +206,55 @@ func TestDeleteSchedule(t *testing.T) {
 		t.Errorf("Expected error to contain %s, actual %s", "404 NOT FOUND", err.Error())
 	}
 }
+
+func TestReadSchedules(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket.Key)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
+	test, err = client.CreateTest(test)
+	defer client.DeleteTest(test)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	environment := &Environment{
+		Name: "tf_environment",
+		InitialVariables: map[string]string{
+			"VarA": "ValB",
+		},
+	}
+	environment, err = client.CreateTestEnvironment(environment, test)
+	defer client.DeleteEnvironment(environment, bucket)
+
+	schedule := NewSchedule()
+	schedule.Note = "Hourly schedule"
+	schedule.Interval = "1h"
+	schedule.EnvironmentID = environment.ID
+
+	schedule, err = client.CreateSchedule(schedule, bucket.Key, test.ID)
+	defer client.DeleteSchedule(schedule, bucket.Key, test.ID)
+	if err != nil {
+		t.Error(err)
+	}
+
+	schedules, err := client.ReadSchedules(bucket.Key, test.ID)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(schedules) != 1 {
+		t.Errorf("Expected %d schedules, actual %d", 1, len(schedules))
+	}
+
+	if schedules[0].Interval != "1h" {
+		t.Errorf("Expected schedule interval %s, actual %s", "Hourly schedule", schedules[0].Interval)
+	}
+}

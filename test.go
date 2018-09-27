@@ -174,12 +174,6 @@ func (test *Test) String() string {
 	return string(value)
 }
 
-func getTestsFromResponse(response interface{}) ([]*Test, error) {
-	var tests []*Test
-	err := decode(&tests, response)
-	return tests, err
-}
-
 func getTestFromResponse(response interface{}) (*Test, error) {
 	test := new(Test)
 	err := decode(test, response)
