@@ -250,6 +250,78 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 	}
 }
 
+func TestListSharedEnvironment(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket.Key)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	var integrationsAvailable []*Integration
+	if integrationsAvailable, err = client.ListIntegrations(teamID); err != nil {
+		t.Error(err)
+	}
+
+	if len(integrationsAvailable) == 0 {
+		t.Error("Expected some integrations to be available found 0 integrations. Do you have at least one integration setup on your account? i.e. slack you will need at least one integration setup on your account, i.e. [slack](https://www.runscope.com/docs/api-testing/slack)")
+	}
+
+	environment := &Environment{
+		Name: "tf_environment_1",
+		InitialVariables: map[string]string{
+			"VarA": "ValB",
+			"VarB": "ValB",
+		},
+		Integrations: []*EnvironmentIntegration{
+			{
+				ID:              integrationsAvailable[0].ID,
+				IntegrationType: integrationsAvailable[0].IntegrationType,
+			},
+		},
+		VerifySsl: false,
+	}
+
+	environment, err = client.CreateSharedEnvironment(environment, bucket)
+	e1 := environment.ID
+	defer func() {
+		err := client.DeleteEnvironment(&Environment{ID: e1}, bucket)
+		if err != nil {
+			t.Errorf("Error deleting environment, %v", err)
+		}
+	}()
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	environment.ID = ""
+	environment.Name = "tf_environment_2"
+	environment, err = client.CreateSharedEnvironment(environment, bucket)
+	e2 := environment.ID
+	defer func() {
+		err := client.DeleteEnvironment(&Environment{ID: e2}, bucket)
+		if err != nil {
+			t.Errorf("Error deleting environment, %v", err)
+		}
+	}()
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	list, err := client.ListSharedEnvironment(bucket)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(list) != 2 {
+		t.Errorf("expected 2 share environments, actual %d.", len(list))
+	}
+}
+
 const sampleEnvironment string = `
 {
   "meta": {
