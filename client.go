@@ -92,9 +92,9 @@ func NewClient(apiURL string, accessToken string) *Client {
 // NewClientAPI Interface initialization
 func NewClientAPI(apiURL string, accessToken string) ClientAPI {
 	return &Client{
-		APIURL: apiURL,
+		APIURL:      apiURL,
 		AccessToken: accessToken,
-		HTTP: cleanhttp.DefaultClient(),
+		HTTP:        cleanhttp.DefaultClient(),
 	}
 }
 
