@@ -47,8 +47,8 @@ func (client *Client) ReadSchedule(schedule *Schedule, bucketKey string, testID 
 	return readSchedule, nil
 }
 
-// ReadSchedules list all the schedules for a given test. See https://www.runscope.com/docs/api/schedules#list
-func (client *Client) ReadSchedules(bucketKey string, testID string) ([]*Schedule, error) {
+// ListSchedules list all the schedules for a given test. See https://www.runscope.com/docs/api/schedules#list
+func (client *Client) ListSchedules(bucketKey string, testID string) ([]*Schedule, error) {
 	resource, error := client.readResource("[]schedule", testID,
 		fmt.Sprintf("/buckets/%s/tests/%s/schedules", bucketKey, testID))
 	if error != nil {
