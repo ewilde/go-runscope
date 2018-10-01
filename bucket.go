@@ -69,13 +69,13 @@ func (client *Client) CreateBucket(bucket *Bucket) (*Bucket, error) {
 
 // ReadBucket list details about an existing bucket resource. See https://www.runscope.com/docs/api/buckets#bucket-list
 func (client *Client) ReadBucket(key string) (*Bucket, error) {
-	resource, error := client.readResource("bucket", key, fmt.Sprintf("/buckets/%s", key))
-	if error != nil {
-		return nil, error
+	resource, err := client.readResource("bucket", key, fmt.Sprintf("/buckets/%s", key))
+	if err != nil {
+		return nil, err
 	}
 
-	bucket, error := getBucketFromResponse(resource.Data)
-	return bucket, error
+	bucket, err := getBucketFromResponse(resource.Data)
+	return bucket, err
 }
 
 // DeleteBucket deletes a bucket by key. See https://www.runscope.com/docs/api/buckets#bucket-delete
@@ -102,13 +102,35 @@ func (client *Client) DeleteBuckets(predicate func(bucket *Bucket) bool) error {
 
 // ListBuckets lists all buckets for an account
 func (client *Client) ListBuckets() ([]*Bucket, error) {
-	resource, error := client.readResource("[]bucket", "", "/buckets")
-	if error != nil {
-		return nil, error
+	resource, err := client.readResource("[]bucket", "", "/buckets")
+	if err != nil {
+		return nil, err
 	}
 
-	buckets, error := getBucketsFromResponse(resource.Data)
-	return buckets, error
+	buckets, err := getBucketsFromResponse(resource.Data)
+	return buckets, err
+}
+
+type ListTestsInput struct {
+	bucketName string
+	count      int
+}
+
+// ListBuckets lists all buckets for an account
+func (client *Client) ListTests(input *ListTestsInput) ([]*Test, error) {
+	count := input.count
+	if count == 0 {
+		count = 10
+	}
+
+	resource, err := client.readResource("[]test", "",
+		fmt.Sprintf("/buckets/%s/tests?count=%d", input.bucketName, count))
+	if err != nil {
+		return nil, err
+	}
+
+	tests, err := getTestsFromResponse(resource.Data)
+	return tests, err
 }
 
 func (bucket *Bucket) String() string {
