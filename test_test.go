@@ -3,7 +3,6 @@ package runscope
 import (
 	"encoding/json"
 	"fmt"
-	"sort"
 	"testing"
 	"time"
 )
@@ -64,59 +63,6 @@ func TestReadTest(t *testing.T) {
 
 	if readTest.CreatedAt.Day() != time.Now().Day() {
 		t.Errorf("Expected time %s js not correct", readTest.CreatedAt.String())
-	}
-}
-
-func TestReadTests(t *testing.T) {
-	testPreCheck(t)
-	client := clientConfigure()
-	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key)
-
-	if err != nil {
-		t.Error(err)
-	}
-
-	for i := 1; i <= 2; i++ {
-		newTestName := fmt.Sprintf("%s%d", "tf_test", i)
-		newTest := &Test{Name: newTestName, Description: "This is a tf newTest", Bucket: bucket}
-		newTest, err = client.CreateTest(newTest)
-		defer client.DeleteTest(newTest)
-
-		if err != nil {
-			t.Error(err)
-		}
-	}
-
-	readTests, err := client.ReadTests(bucket.Key)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if readTests == nil {
-		t.Error("Expected non null result")
-	}
-
-	if len(readTests) != 2 {
-		t.Error("Expected two results")
-
-	}
-
-	sort.Slice(readTests, func(i, j int) bool {
-		return readTests[i].Name < readTests[j].Name
-	})
-
-	for i := 1; i <= 2; i++ {
-		readTest := readTests[i-1]
-		expectedTestName := fmt.Sprintf("%s%d", "tf_test", i)
-
-		if readTest.Name != expectedTestName {
-			t.Errorf("Expected name %s, actual %s", expectedTestName, readTest.Name)
-		}
-
-		if readTest.CreatedAt.Day() != time.Now().Day() {
-			t.Errorf("Expected time %s js not correct", readTest.CreatedAt.String())
-		}
 	}
 }
 
@@ -457,5 +403,73 @@ func TestReadFromResponse(t *testing.T) {
 
 	if beforeScript != "log(\"This is a sample pre-request script\");" {
 		t.Errorf("Expected script value %s, actual %s", "log(\"This is a sample pre-request script\");", beforeScript)
+	}
+}
+
+func TestListsTests(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket.Key)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	newTest := &Test{Name: "tf_test1", Description: "This is a tf newTest", Bucket: bucket}
+	newTest, err = client.CreateTest(newTest)
+	defer client.DeleteTest(newTest)
+
+	newTest = &Test{Name: "tf_test2", Description: "This is a tf newTest", Bucket: bucket}
+	newTest, err = client.CreateTest(newTest)
+	defer client.DeleteTest(newTest)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	tests, err := client.ListTests(&ListTestsInput{BucketName: bucket.Key})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(tests) != 2 {
+		t.Errorf("Expected %d tests, actual no found %d", 2, len(tests))
+	}
+
+	if tests[0].Name != "tf_test2" {
+		t.Errorf("Expected name to be %s, found %s", "tf_test2", tests[1].Name)
+	}
+}
+
+func TestListsTestsMoreThan10(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket.Key)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	for i := 0; i < 15; i++ {
+		newTest := &Test{Name: fmt.Sprintf("tf_test1-%d", i), Description: "This is a tf newTest", Bucket: bucket}
+		newTest, err = client.CreateTest(newTest)
+
+		//noinspection ALL
+		defer client.DeleteTest(&Test{Bucket: newTest.Bucket, ID: newTest.ID})
+	}
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	tests, err := client.ListTests(&ListTestsInput{BucketName: bucket.Key, Count: 20})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(tests) != 15 {
+		t.Errorf("Expected %d tests, actual no found %d", 15, len(tests))
 	}
 }

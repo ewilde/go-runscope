@@ -207,7 +207,7 @@ func TestDeleteSchedule(t *testing.T) {
 	}
 }
 
-func TestReadSchedules(t *testing.T) {
+func TestListSchedules(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
@@ -245,7 +245,7 @@ func TestReadSchedules(t *testing.T) {
 		t.Error(err)
 	}
 
-	schedules, err := client.ReadSchedules(bucket.Key, test.ID)
+	schedules, err := client.ListSchedules(bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}

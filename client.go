@@ -33,6 +33,8 @@ type ClientAPI interface {
 	DeleteTest(test *Test) error
 	DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error
 	ListBuckets() ([]*Bucket, error)
+	ListTests(input *ListTestsInput) ([]*Test, error)
+	ListSchedules(bucketKey string, testID string) ([]*Schedule, error)
 	ListIntegrations(teamID string) ([]*Integration, error)
 	ListPeople(teamID string) ([]*People, error)
 	ReadBucket(key string) (*Bucket, error)
@@ -41,7 +43,6 @@ type ClientAPI interface {
 	ReadTest(test *Test) (*Test, error)
 	ReadTestEnvironment(environment *Environment, test *Test) (*Environment, error)
 	ReadTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
-	ReadTests(bucketKey string) ([]*Test, error)
 	UpdateSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
 	UpdateSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
 	UpdateTest(test *Test) (*Test, error)
