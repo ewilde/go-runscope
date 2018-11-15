@@ -51,7 +51,7 @@ func clientConfigure() *Client {
 func testPreCheck(t *testing.T) {
 	skip := os.Getenv("RUNSCOPE_ACC") == ""
 	if skip {
-		t.Log("runscope client.go tests require setting RUNSCOPE")
+		t.Log("runscope client.go tests require setting RUNSCOPE_ACC")
 		t.Skip()
 	}
 

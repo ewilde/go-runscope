@@ -112,12 +112,13 @@ func (client *Client) ListBuckets() ([]*Bucket, error) {
 	return buckets, err
 }
 
+// ListTestsInput represents the input to ListTests func
 type ListTestsInput struct {
 	BucketName string
 	Count      int
 }
 
-// ListBuckets lists all buckets for an account
+// ListTests lists all buckets for an account
 func (client *Client) ListTests(input *ListTestsInput) ([]*Test, error) {
 	count := input.Count
 	if count == 0 {
