@@ -11,7 +11,7 @@ $(BINARY): $(SOURCES)
 
 build:
 	go get github.com/golang/lint/golint
-	go test $(shell go list ./... | grep -v /vendor/) -v=1 --logtostderr
+	go test $(shell go list ./... | grep -v /vendor/) -v=2 --logtostderr
 	go vet $(shell go list ./... | grep -v /vendor/)
 	golint $(shell go list ./... | grep -v /vendor/)
 

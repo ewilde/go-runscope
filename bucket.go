@@ -118,7 +118,7 @@ type ListTestsInput struct {
 	Count      int
 }
 
-// ListTests lists all buckets for an account
+// ListTests lists all tests for a bucket
 func (client *Client) ListTests(input *ListTestsInput) ([]*Test, error) {
 	count := input.Count
 	if count == 0 {
