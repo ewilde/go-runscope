@@ -20,7 +20,7 @@ func createBucket() *runscope.Bucket {
 
 	bucket, err := client.CreateBucket(bucket)
 	if err != nil {
-		log.Printf("[ERROR] error creating bucket: %s", err)
+		DebugF(1, "[ERROR] error creating bucket: %s", err)
 	}
 
 	fmt.Printf("Bucket created successfully: %s", bucket.String())
@@ -30,7 +30,7 @@ func createBucket() *runscope.Bucket {
 func readBucket() {
 	bucket, err := client.ReadBucket("htqee6p4dhvc")
 	if err != nil {
-		log.Printf("[ERROR] error creating bucket: %s", err)
+		DebugF(1, "[ERROR] error creating bucket: %s", err)
 	}
 
 	fmt.Printf("Bucket read successfully: %s", bucket.String())
@@ -39,6 +39,6 @@ func readBucket() {
 func deleteBucket() {
 	err := client.DeleteBucket("htqee6p4dhvc")
 	if err != nil {
-		log.Printf("[ERROR] error creating bucket: %s", err)
+		DebugF(1, "[ERROR] error creating bucket: %s", err)
 	}
 }

@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/url"
 )
 
@@ -28,19 +27,19 @@ type Bucket struct {
 
 // CreateBucket creates a new bucket resource. See https://www.runscope.com/docs/api/buckets#bucket-create
 func (client *Client) CreateBucket(bucket *Bucket) (*Bucket, error) {
-	log.Printf("[DEBUG] creating bucket %s", bucket.Name)
+	DebugF(1, "creating bucket %s", bucket.Name)
 	data := url.Values{}
 	data.Add("name", bucket.Name)
 	data.Add("team_uuid", bucket.Team.ID)
 
-	log.Printf("[DEBUG] 	request: POST %s %#v", "/buckets", data)
+	DebugF(2, "	request: POST %s %#v", "/buckets", data)
 
 	req, err := client.newFormURLEncodedRequest("POST", "/buckets", data)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("[DEBUG] %#v", req)
+	DebugF(2, "%#v", req)
 	resp, err := client.HTTP.Do(req)
 	if err != nil {
 		return nil, err
@@ -49,7 +48,7 @@ func (client *Client) CreateBucket(bucket *Bucket) (*Bucket, error) {
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
-	log.Printf("[DEBUG] 	response: %d %s", resp.StatusCode, bodyString)
+	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
