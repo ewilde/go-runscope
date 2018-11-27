@@ -2,7 +2,6 @@ package runscope
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"strings"
 	"testing"
@@ -69,7 +68,7 @@ func testPreCheck(t *testing.T) {
 
 func deletePredicate(bucket *Bucket) bool {
 	if strings.HasPrefix(bucket.Name, "test") || strings.HasSuffix(bucket.Name, "-test") {
-		log.Printf("deleting bucket name: %s key: %s \n", bucket.Name, bucket.Key)
+		DebugF(1, "deleting bucket name: %s key: %s \n", bucket.Name, bucket.Key)
 		return true
 	}
 	return false

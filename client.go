@@ -10,7 +10,6 @@ import (
 
 	"github.com/hashicorp/go-cleanhttp"
 	"io/ioutil"
-	"log"
 	"strings"
 	"sync"
 )
@@ -101,14 +100,14 @@ func NewClientAPI(apiURL string, accessToken string) ClientAPI {
 
 func (client *Client) createResource(
 	resource interface{}, resourceType string, resourceName string, endpoint string) (*response, error) {
-	log.Printf("[DEBUG] creating %s %s", resourceType, resourceName)
+	DebugF(1, "creating %s %s", resourceType, resourceName)
 
 	bytes, err := json.Marshal(resource)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("[DEBUG] 	request: POST %s %s", endpoint, string(bytes))
+	DebugF(2, "	request: POST %s %s", endpoint, string(bytes))
 
 	req, err := client.newRequest("POST", endpoint, bytes)
 	if err != nil {
@@ -123,7 +122,7 @@ func (client *Client) createResource(
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
-	log.Printf("[DEBUG] 	response: %d %s", resp.StatusCode, bodyString)
+	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
@@ -142,7 +141,7 @@ func (client *Client) createResource(
 }
 
 func (client *Client) readResource(resourceType string, resourceName string, endpoint string) (*response, error) {
-	log.Printf("[DEBUG] reading %s %s", resourceType, resourceName)
+	DebugF(1, "reading %s %s", resourceType, resourceName)
 	response := new(response)
 
 	req, err := client.newRequest("GET", endpoint, nil)
@@ -150,7 +149,7 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 		return response, err
 	}
 
-	log.Printf("[DEBUG] 	request: GET %s", endpoint)
+	DebugF(2, "	request: GET %s", endpoint)
 	resp, err := client.HTTP.Do(req)
 	if err != nil {
 		return response, err
@@ -159,7 +158,7 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
-	log.Printf("[DEBUG] 	response: %d %s", resp.StatusCode, bodyString)
+	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
@@ -177,14 +176,14 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 }
 
 func (client *Client) updateResource(resource interface{}, resourceType string, resourceName string, endpoint string) (*response, error) {
-	log.Printf("[DEBUG] updating %s %s", resourceType, resourceName)
+	DebugF(1, "updating %s %s", resourceType, resourceName)
 	response := response{}
 	bytes, err := json.Marshal(resource)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("[DEBUG] 	request: PUT %s %s", endpoint, string(bytes))
+	DebugF(2, "	request: PUT %s %s", endpoint, string(bytes))
 	req, err := client.newRequest("PUT", endpoint, bytes)
 	if err != nil {
 		return &response, err
@@ -198,7 +197,7 @@ func (client *Client) updateResource(resource interface{}, resourceType string, 
 
 	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
-	log.Printf("[DEBUG] 	response: %d %s", resp.StatusCode, bodyString)
+	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
 	if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
@@ -216,15 +215,15 @@ func (client *Client) updateResource(resource interface{}, resourceType string, 
 }
 
 func (client *Client) deleteResource(resourceType string, resourceName string, endpoint string) error {
-	log.Printf("[DEBUG] deleting %s %s", resourceType, resourceName)
+	DebugF(1, "deleting %s %s", resourceType, resourceName)
 	req, err := client.newRequest("DELETE", endpoint, nil)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("[DEBUG] 	request: DELETE %s", endpoint)
+	DebugF(2, "	request: DELETE %s", endpoint)
 	resp, err := client.HTTP.Do(req)
-	log.Printf("[DEBUG] 	response: %d", resp.StatusCode)
+	DebugF(2, "	response: %d", resp.StatusCode)
 	if err != nil {
 		return err
 	}
@@ -233,7 +232,7 @@ func (client *Client) deleteResource(resourceType string, resourceName string, e
 	if resp.StatusCode >= 300 {
 		bodyBytes, _ := ioutil.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
-		log.Printf("[DEBUG] %s", bodyString)
+		DebugF(2, "%s", bodyString)
 
 		errorResp := new(errorResponse)
 		if err = json.Unmarshal(bodyBytes, &errorResp); err != nil {

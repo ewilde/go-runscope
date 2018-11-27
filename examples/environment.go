@@ -2,7 +2,6 @@ package examples
 
 import (
 	"github.com/ewilde/go-runscope"
-	"log"
 )
 
 func createSharedEnvironment() {
@@ -26,6 +25,6 @@ func createSharedEnvironment() {
 
 	environment, err := client.CreateSharedEnvironment(environment, createBucket())
 	if err != nil {
-		log.Printf("[ERROR] error creating environment: %s", err)
+		runscope.ErrorF(1, "error creating environment: %s", err)
 	}
 }
