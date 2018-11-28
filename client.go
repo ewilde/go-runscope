@@ -11,7 +11,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/golang/glog"
 	"github.com/hashicorp/go-cleanhttp"
 )
 

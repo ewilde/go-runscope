@@ -9,8 +9,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/url"
-
-	"github.com/golang/glog"
 )
 
 // Bucket resources are a simple way to organize your requests and tests. See https://www.runscope.com/docs/api/buckets and https://www.runscope.com/docs/buckets
