@@ -3,7 +3,6 @@ package examples
 import (
 	"fmt"
 	"github.com/ewilde/go-runscope"
-	"log"
 )
 
 var accessToken = "{your token}"  // See https://www.runscope.com/applications
@@ -20,7 +19,7 @@ func createBucket() *runscope.Bucket {
 
 	bucket, err := client.CreateBucket(bucket)
 	if err != nil {
-		DebugF(1, "[ERROR] error creating bucket: %s", err)
+		runscope.DebugF(1, "[ERROR] error creating bucket: %s", err)
 	}
 
 	fmt.Printf("Bucket created successfully: %s", bucket.String())
@@ -30,7 +29,7 @@ func createBucket() *runscope.Bucket {
 func readBucket() {
 	bucket, err := client.ReadBucket("htqee6p4dhvc")
 	if err != nil {
-		DebugF(1, "[ERROR] error creating bucket: %s", err)
+		runscope.DebugF(1, "[ERROR] error creating bucket: %s", err)
 	}
 
 	fmt.Printf("Bucket read successfully: %s", bucket.String())
@@ -39,6 +38,6 @@ func readBucket() {
 func deleteBucket() {
 	err := client.DeleteBucket("htqee6p4dhvc")
 	if err != nil {
-		DebugF(1, "[ERROR] error creating bucket: %s", err)
+		runscope.DebugF(1, "[ERROR] error creating bucket: %s", err)
 	}
 }
