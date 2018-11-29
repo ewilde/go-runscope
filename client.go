@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/hashicorp/go-cleanhttp"
-	"io/ioutil"
 	"strings"
 	"sync"
+
+	"github.com/hashicorp/go-cleanhttp"
 )
 
 // APIURL is the default runscope api uri
@@ -156,7 +156,10 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 	}
 	defer resp.Body.Close()
 
-	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return response, err
+	}
 	bodyString := string(bodyBytes)
 	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
@@ -166,12 +169,13 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 			return response, fmt.Errorf("Status: %s Error reading %s: %s",
 				resp.Status, resourceType, resourceName)
 		}
-
 		return response, fmt.Errorf("Status: %s Error reading %s: %s, reason: %q",
 			resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 	}
 
-	json.Unmarshal(bodyBytes, &response)
+	if err = json.Unmarshal(bodyBytes, &response); err != nil {
+		return response, fmt.Errorf("failed to Unmarshal response body: %v", err)
+	}
 	return response, nil
 }
 
