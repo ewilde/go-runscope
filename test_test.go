@@ -428,7 +428,7 @@ func TestListsTests(t *testing.T) {
 		t.Error(err)
 	}
 
-	tests, err := client.ListTests(&ListTestsInput{BucketName: bucket.Key})
+	tests, err := client.ListTests(&ListTestsInput{BucketKey: bucket.Key})
 	if err != nil {
 		t.Error(err)
 	}
@@ -464,7 +464,7 @@ func TestListsTestsMoreThan10(t *testing.T) {
 		t.Error(err)
 	}
 
-	tests, err := client.ListTests(&ListTestsInput{BucketName: bucket.Key, Count: 20})
+	tests, err := client.ListTests(&ListTestsInput{BucketKey: bucket.Key, Count: 20})
 	if err != nil {
 		t.Error(err)
 	}

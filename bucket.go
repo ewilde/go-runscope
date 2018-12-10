@@ -11,6 +11,11 @@ import (
 	"net/url"
 )
 
+const (
+	// DefaultPageSize is the max number of items fetched in each request
+	DefaultPageSize = 10
+)
+
 // Bucket resources are a simple way to organize your requests and tests. See https://www.runscope.com/docs/api/buckets and https://www.runscope.com/docs/buckets
 type Bucket struct {
 	Name           string `json:"name,omitempty"`
@@ -112,25 +117,48 @@ func (client *Client) ListBuckets() ([]*Bucket, error) {
 
 // ListTestsInput represents the input to ListTests func
 type ListTestsInput struct {
-	BucketName string
-	Count      int
+	BucketKey string
+	Count     int
+	Offset    int
 }
 
-// ListTests lists all tests for a bucket
+// ListTests lists some tests given ListTestsInput
 func (client *Client) ListTests(input *ListTestsInput) ([]*Test, error) {
 	count := input.Count
 	if count == 0 {
-		count = 10
+		count = DefaultPageSize
 	}
 
 	resource, err := client.readResource("[]test", "",
-		fmt.Sprintf("/buckets/%s/tests?count=%d", input.BucketName, count))
+		fmt.Sprintf("/buckets/%s/tests?count=%d&offset=%d", input.BucketKey, count, input.Offset))
 	if err != nil {
 		return nil, err
 	}
 
 	tests, err := getTestsFromResponse(resource.Data)
 	return tests, err
+}
+
+// ListAllTests lists all tests for a bucket
+func (client *Client) ListAllTests(input *ListTestsInput) ([]*Test, error) {
+	var allTests []*Test
+	cfg := &ListTestsInput{
+		BucketKey: input.BucketKey,
+		Count:     input.Count,
+	}
+	if cfg.Count == 0 {
+		cfg.Count = DefaultPageSize
+	}
+	for cfg.Offset = 0; ; cfg.Offset += cfg.Count {
+		tests, err := client.ListTests(cfg)
+		if err != nil {
+			return allTests, err
+		}
+		allTests = append(allTests, tests...)
+		if len(tests) < cfg.Count {
+			return allTests, nil
+		}
+	}
 }
 
 func (bucket *Bucket) String() string {
