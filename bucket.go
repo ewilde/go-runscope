@@ -150,6 +150,7 @@ func (client *Client) ListAllTests(input *ListTestsInput) ([]*Test, error) {
 	if cfg.Count == 0 {
 		cfg.Count = DefaultPageSize
 	}
+	
 	for cfg.Offset = 0; ; cfg.Offset += cfg.Count {
 		tests, err := client.ListTests(cfg)
 		if err != nil {
