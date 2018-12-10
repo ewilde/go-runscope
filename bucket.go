@@ -146,6 +146,7 @@ func (client *Client) ListAllTests(input *ListTestsInput) ([]*Test, error) {
 		BucketKey: input.BucketKey,
 		Count:     input.Count,
 	}
+	
 	if cfg.Count == 0 {
 		cfg.Count = DefaultPageSize
 	}
