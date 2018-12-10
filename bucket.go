@@ -156,6 +156,7 @@ func (client *Client) ListAllTests(input *ListTestsInput) ([]*Test, error) {
 		if err != nil {
 			return allTests, err
 		}
+		
 		allTests = append(allTests, tests...)
 		if len(tests) < cfg.Count {
 			return allTests, nil
