@@ -75,14 +75,9 @@ func deletePredicate(bucket *Bucket) bool {
 }
 
 func TestMain(m *testing.M) {
-
 	client := clientConfigure()
 	client.DeleteBuckets(deletePredicate)
-
 	code := m.Run()
-
 	client.DeleteBuckets(deletePredicate)
-
 	os.Exit(code)
-
 }

@@ -76,6 +76,37 @@ func TestListBuckets(t *testing.T) {
 	}
 }
 
+func TestListAllTests(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(&Bucket{Name: "test-list-all-tests", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket.Key)
+	if err != nil {
+		t.Error(err)
+	}
+
+	numTests := 5
+	for i := 0; i < numTests; i++ {
+		_, err := client.CreateTest(&Test{
+			Name:        fmt.Sprintf("some_test_%d", i),
+			Description: "some desc",
+			Bucket:      bucket,
+		})
+		if err != nil {
+			t.Error(err)
+		}
+	}
+
+	tests, err := client.ListAllTests(&ListTestsInput{
+		BucketKey: bucket.Key,
+		Count:     1,
+	})
+
+	if len(tests) != numTests {
+		t.Errorf("Length of tests expected %v, actual:%v", numTests, len(tests))
+	}
+}
+
 func TestReadBucket(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()

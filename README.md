@@ -216,7 +216,7 @@ environment variables.
 ```bash
 RUNSCOPE_ACC=true
 RUNSCOPE_ACCESS_TOKEN={your access token}
-RUNSCOPE_TEAM_UUID={your team uuid}
+RUNSCOPE_TEAM_ID={your team uuid}
 ```
 Access tokens can be created using the [applications](https://www.runscope.com/applications)
 section of your runscope account.
@@ -231,4 +231,3 @@ Your team url can be found by taking the uuid from https://www.runscope.com/team
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-
