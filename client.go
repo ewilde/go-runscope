@@ -33,6 +33,7 @@ type ClientAPI interface {
 	DeleteTestStep(testStep *TestStep, bucketKey string, testID string) error
 	ListBuckets() ([]*Bucket, error)
 	ListTests(input *ListTestsInput) ([]*Test, error)
+	ListAllTests(input *ListTestsInput) ([]*Test, error)
 	ListSchedules(bucketKey string, testID string) ([]*Schedule, error)
 	ListIntegrations(teamID string) ([]*Integration, error)
 	ListPeople(teamID string) ([]*People, error)
