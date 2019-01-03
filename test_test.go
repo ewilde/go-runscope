@@ -66,6 +66,42 @@ func TestReadTest(t *testing.T) {
 	}
 }
 
+func TestReadTestMetrics(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
+	defer client.DeleteBucket(bucket.Key)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	newTest := &Test{Name: "tf_test", Description: "This is a tf newTest", Bucket: bucket}
+	newTest, err = client.CreateTest(newTest)
+	defer client.DeleteTest(newTest)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	readTestMetrics, err := client.ReadTestMetrics(newTest, &ReadMetricsInput{})
+	if err != nil {
+		t.Error(err)
+	}
+
+	if readTestMetrics.Region != "all" {
+		t.Errorf("Expected region all, actual %s", readTestMetrics.Region)
+	}
+
+	if readTestMetrics.Timeframe != "month" {
+		t.Errorf("Expected timeframe month, actual %s", readTestMetrics.Timeframe)
+	}
+
+	if len(readTestMetrics.ResponseTimes) == 0 {
+		t.Error("Expected response times but none found")
+	}
+}
+
 func TestUpdateTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
