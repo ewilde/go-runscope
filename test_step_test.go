@@ -42,6 +42,34 @@ func TestCreateTestStep(t *testing.T) {
 	if len(step.ID) == 0 {
 		t.Error("Test step id should not be empty")
 	}
+	
+	test2 := &Test{Name: "tf_test2", Description: "This is a tf test with a subtest step", Bucket: bucket}
+	test2, err = client.CreateTest(test2)
+	defer client.DeleteTest(test2)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	step2 := NewTestStep()
+	step2.StepType = "subtest"
+	step2.TestUUID = test.ID
+	step2.Assertions = []*Assertion{{
+		Source:     "response_json",
+		Property:   "result",
+		Comparison: "equal",
+		Value:      "pass",
+	}}
+
+	step2, err = client.CreateTestStep(step2, bucket.Key, test2.ID)
+	defer client.DeleteTestStep(step2, bucket.Key, test2.ID)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(step2.ID) == 0 {
+		t.Error("Test step id should not be empty")
+	}
 }
 
 func TestReadTestStep(t *testing.T) {
