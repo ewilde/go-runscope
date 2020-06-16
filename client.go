@@ -37,6 +37,7 @@ type ClientAPI interface {
 	ListSchedules(bucketKey string, testID string) ([]*Schedule, error)
 	ListIntegrations(teamID string) ([]*Integration, error)
 	ListPeople(teamID string) ([]*People, error)
+	ListSharedEnvironment(bucket *Bucket) ([]*Environment, error)
 	ReadBucket(key string) (*Bucket, error)
 	ReadSchedule(schedule *Schedule, bucketKey string, testID string) (*Schedule, error)
 	ReadSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error)
