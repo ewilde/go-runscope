@@ -21,6 +21,7 @@ type TestStep struct {
 	Scripts       []string               `json:"scripts,omitempty"`
 	BeforeScripts []string               `json:"before_scripts,omitempty"`
 	Method        string                 `json:"method,omitempty"`
+	TestUUID      string                 `json:"test_uuid,omitempty"`
 }
 
 // NewTestStep creates a new test step struct
