@@ -24,6 +24,7 @@ type Environment struct {
 	ParentEnvironmentID string                    `json:"parent_environment_id,omitempty"`
 	EmailSettings       *EmailSettings            `json:"emails,omitempty"`
 	ClientCertificate   string                    `json:"client_certificate,omitempty"`
+	Headers             map[string][]string       `json:"headers,omitempty"`
 }
 
 // EmailSettings determining how test failures trigger notifications

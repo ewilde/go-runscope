@@ -38,6 +38,12 @@ func TestCreateSharedEnvironment(t *testing.T) {
 			},
 		},
 		VerifySsl: false,
+		Headers: map[string][]string{
+			"Accept": []string{
+				"application/json",
+				"text/plain",
+			},
+		},
 	}
 
 	environment, err = client.CreateSharedEnvironment(environment, bucket)
@@ -75,6 +81,14 @@ func TestCreateSharedEnvironment(t *testing.T) {
 
 	if integration.IntegrationType != integrationsAvailable[0].IntegrationType {
 		t.Errorf("Expected integration type %s got %s", integrationsAvailable[0].IntegrationType, integration.IntegrationType)
+	}
+
+	if len(environment.Headers) != 1 {
+		t.Errorf("Expected %d headers got %d", 1, len(environment.Headers))
+	}
+
+	if len(environment.Headers["Accept"]) != 2 {
+		t.Errorf("Expected %d accept header values got %d", 2, len(environment.Headers))
 	}
 }
 
