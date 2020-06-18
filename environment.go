@@ -69,6 +69,11 @@ func (client *Client) ListSharedEnvironment(bucket *Bucket) ([]*Environment, err
 	return client.listEnvironments(bucket, fmt.Sprintf("/buckets/%s/environments", bucket.Key))
 }
 
+// ListTestEnvironment lists all tests environments in a given test. See https://api.blazemeter.com/api-monitoring/#test-envrionment-list
+func (client *Client) ListTestEnvironment(bucket *Bucket, test *Test) ([]*Environment, error) {
+	return client.listEnvironments(bucket, fmt.Sprintf("/buckets/%s/tests/%s/environments", bucket.Key, test.ID))
+}
+
 // ReadSharedEnvironment lists details about an existing shared environment. See https://www.runscope.com/docs/api/environments#detail
 func (client *Client) ReadSharedEnvironment(environment *Environment, bucket *Bucket) (*Environment, error) {
 	return client.readEnvironment(environment, fmt.Sprintf("/buckets/%s/environments/%s",
