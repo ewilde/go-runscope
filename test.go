@@ -92,7 +92,7 @@ type TestMetric struct {
 type ResponseTime struct {
 	SuccessRatio          float64 `json:"success_ratio,omitempty"`
 	Timestamp             int64   `json:"timestamp,omitempty"`
-	AverageResponseTimeMs int     `json:"avg_response_time_ms,omitempty"`
+	AverageResponseTimeMs float64 `json:"avg_response_time_ms,omitempty"`
 }
 
 type TimePeriodMetic struct {
