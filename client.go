@@ -8,10 +8,11 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/hashicorp/go-cleanhttp"
 	"io/ioutil"
 	"strings"
 	"sync"
+
+	"github.com/hashicorp/go-cleanhttp"
 )
 
 // APIURL is the default runscope api uri
@@ -51,6 +52,10 @@ type ClientAPI interface {
 	UpdateTest(test *Test) (*Test, error)
 	UpdateTestEnvironment(environment *Environment, test *Test) (*Environment, error)
 	UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
+	ListResults(bucketKey string, testID string) ([]*Result, error)
+	ReadTestResult(testRunID string, bucketKey string, testID string) (*Result, error)
+	ReadTestLatestResult(testID string, bucketKey string) (*Result, error)
+	ReadTestStepResult(testRunID string, bucketKey string, testID string, testStepID string) (*Result, error)
 }
 
 // Client provides access to create, read, update and delete runscope resources
