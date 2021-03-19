@@ -22,6 +22,19 @@ func TestListResults(t *testing.T) {
 		t.Error(err)
 	}
 
+	environment := &Environment{
+		Name: "tf_environment",
+		InitialVariables: map[string]string{
+			"VarA": "ValB",
+		},
+	}
+	environment, err = client.CreateTestEnvironment(environment, newTest)
+	if err != nil {
+		t.Error(err)
+	}
+
+	defer client.DeleteEnvironment(environment, bucket)
+
 	step := NewTestStep()
 	step.StepType = "request"
 	step.URL = "http://example.com"
@@ -45,6 +58,7 @@ func TestListResults(t *testing.T) {
 	schedule := NewSchedule()
 	schedule.Note = "Daily schedule"
 	schedule.Interval = "1m"
+	schedule.EnvironmentID = environment.ID
 
 	schedule, err = client.CreateSchedule(schedule, bucket.Key, newTest.ID)
 	if err != nil {
