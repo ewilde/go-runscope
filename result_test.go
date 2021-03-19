@@ -22,6 +22,26 @@ func TestListResults(t *testing.T) {
 		t.Error(err)
 	}
 
+	step := NewTestStep()
+	step.StepType = "request"
+	step.URL = "http://example.com"
+	step.Method = "GET"
+	step.Assertions = []*Assertion{{
+		Source:     "response_status",
+		Comparison: "equal_number",
+		Value:      200,
+	}}
+
+	step, err = client.CreateTestStep(step, bucket.Key, newTest.ID)
+	if err != nil {
+		t.Error(err)
+	}
+
+	defer client.DeleteTestStep(step, bucket.Key, newTest.ID)
+	if err != nil {
+		t.Error(err)
+	}
+
 	listResults, err := client.ListResults(bucket.Key, newTest.ID)
 	if err != nil {
 		t.Error(err)

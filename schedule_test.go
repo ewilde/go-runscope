@@ -143,7 +143,8 @@ func TestUpdateSchedule(t *testing.T) {
 	}
 
 	schedule.Note = "Updated note field"
-	_, err = client.UpdateSchedule(schedule, bucket.Key, test.ID)
+	d, err := client.UpdateSchedule(schedule, bucket.Key, test.ID)
+	t.Log(d)
 
 	readSchedule, err := client.ReadSchedule(schedule, bucket.Key, test.ID)
 	if err != nil {
