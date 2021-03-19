@@ -110,11 +110,7 @@ func TestCreateTestEnvironment(t *testing.T) {
 	defer client.DeleteTest(test)
 	integrations, _ := client.ListIntegrations(teamID)
 	slack := choose(integrations, func(item *Integration) bool {
-		if item.IntegrationType == "slack" {
-			return true
-		}
-
-		return false
+		return item.IntegrationType == "slack"
 	})
 	environment := &Environment{
 		Name: "tf_environment",

@@ -261,9 +261,7 @@ func (client *Client) deleteResource(resourceType string, resourceName string, e
 }
 
 func (client *Client) newFormURLEncodedRequest(method string, endpoint string, data url.Values) (*http.Request, error) {
-
-	var urlStr string
-	urlStr = client.APIURL + endpoint
+	urlStr := client.APIURL + endpoint
 	url, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, fmt.Errorf("Error during parsing request URL: %s", err)
@@ -282,9 +280,7 @@ func (client *Client) newFormURLEncodedRequest(method string, endpoint string, d
 }
 
 func (client *Client) newRequest(method string, endpoint string, body []byte) (*http.Request, error) {
-
-	var urlStr string
-	urlStr = client.APIURL + endpoint
+	urlStr := client.APIURL + endpoint
 	url, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, fmt.Errorf("Error during parsing request URL: %s", err)

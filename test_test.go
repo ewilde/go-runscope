@@ -453,6 +453,10 @@ func TestListsTests(t *testing.T) {
 
 	newTest := &Test{Name: "tf_test1", Description: "This is a tf newTest", Bucket: bucket}
 	newTest, err = client.CreateTest(newTest)
+	if err != nil {
+		t.Error(err)
+	}
+
 	defer client.DeleteTest(newTest)
 
 	newTest = &Test{Name: "tf_test2", Description: "This is a tf newTest", Bucket: bucket}

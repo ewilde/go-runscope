@@ -30,6 +30,10 @@ func TestCreateSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
+	if err != nil {
+		t.Error(err)
+	}
+
 	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
@@ -73,6 +77,10 @@ func TestReadSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
+	if err != nil {
+		t.Error(err)
+	}
+
 	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
@@ -129,6 +137,10 @@ func TestUpdateSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
+	if err != nil {
+		t.Error(err)
+	}
+
 	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
@@ -144,6 +156,10 @@ func TestUpdateSchedule(t *testing.T) {
 
 	schedule.Note = "Updated note field"
 	d, err := client.UpdateSchedule(schedule, bucket.Key, test.ID)
+	if err != nil {
+		t.Error(err)
+	}
+
 	t.Log(d)
 
 	readSchedule, err := client.ReadSchedule(schedule, bucket.Key, test.ID)
@@ -181,6 +197,10 @@ func TestDeleteSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
+	if err != nil {
+		t.Error(err)
+	}
+
 	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
@@ -233,6 +253,10 @@ func TestListSchedules(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
+	if err != nil {
+		t.Error(err)
+	}
+
 	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()

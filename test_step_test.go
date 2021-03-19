@@ -170,6 +170,9 @@ func TestUpdateTestStep(t *testing.T) {
 
 	step.Method = "POST"
 	_, err = client.UpdateTestStep(step, bucket.Key, test.ID)
+	if err != nil {
+		t.Error(err)
+	}
 
 	readStep, err := client.ReadTestStep(step, bucket.Key, test.ID)
 	if err != nil {
