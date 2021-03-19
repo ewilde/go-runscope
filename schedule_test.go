@@ -202,8 +202,8 @@ func TestDeleteSchedule(t *testing.T) {
 		t.Error("Should not have found test schedule after deleting it")
 	}
 
-	if !strings.Contains(err.Error(), "404 NOT FOUND") {
-		t.Errorf("Expected error to contain %s, actual %s", "404 NOT FOUND", err.Error())
+	if !strings.Contains(err.Error(), "404 Not Found") {
+		t.Errorf("Expected error to contain %s, actual %s", "404 Not Found", err.Error())
 	}
 }
 

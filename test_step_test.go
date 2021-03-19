@@ -42,7 +42,7 @@ func TestCreateTestStep(t *testing.T) {
 	if len(step.ID) == 0 {
 		t.Error("Test step id should not be empty")
 	}
-	
+
 	test2 := &Test{Name: "tf_test2", Description: "This is a tf test with a subtest step", Bucket: bucket}
 	test2, err = client.CreateTest(test2)
 	defer client.DeleteTest(test2)
@@ -224,8 +224,8 @@ func TestDeleteTestStep(t *testing.T) {
 		t.Error("Should not have found test step after deleting it")
 	}
 
-	if !strings.Contains(err.Error(), "404 NOT FOUND") {
-		t.Errorf("Expected error to contain %s, actual %s", "404 NOT FOUND", err.Error())
+	if !strings.Contains(err.Error(), "404 Not Found") {
+		t.Errorf("Expected error to contain %s, actual %s", "404 Not Found", err.Error())
 	}
 }
 
