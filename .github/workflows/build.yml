@@ -28,4 +28,5 @@ jobs:
         make build
       env:
         RUNSCOPE_ACC: true
-        # RUNSCOPE_TEAM_ID and RUNSCOPE_ACCESS_TOKEN should be added in github setting
+        RUNSCOPE_TEAM_ID: ${{ secrets.RUNSCOPE_TEAM_ID }}
+        RUNSCOPE_ACCESS_TOKEN: ${{ secrets.RUNSCOPE_ACCESS_TOKEN }}
