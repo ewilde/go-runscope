@@ -35,11 +35,19 @@ func TestDeleteBuckets(t *testing.T) {
 	client.DeleteBuckets(func(bucket *Bucket) bool { return bucket.Name == "test-bob" })
 
 	fredBucket, err := client.ReadBucket(bucket.Key)
+
+	if err != nil {
+		t.Error(err)
+	}
 	if fredBucket == nil {
 		t.Errorf("Bucket key: %v should not be deleted", bucket.Key)
 	}
 
 	bobBucket, err := client.ReadBucket(bucket2.Key)
+	if err != nil {
+		t.Error(err)
+	}
+
 	if bobBucket != nil {
 		t.Errorf("Bucket key: %v should be deleted", bobBucket.Key)
 	}
@@ -101,6 +109,10 @@ func TestListAllTests(t *testing.T) {
 		BucketKey: bucket.Key,
 		Count:     1,
 	})
+
+	if err != nil {
+		t.Error(err)
+	}
 
 	if len(tests) != numTests {
 		t.Errorf("Length of tests expected %v, actual:%v", numTests, len(tests))

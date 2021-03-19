@@ -309,8 +309,7 @@ func TestReadFromResponse(t *testing.T) {
 		t.Errorf("Expected name %s, actual %s", "Sample Name", test.Name)
 	}
 
-	expectedTime := time.Time{}
-	expectedTime = time.Unix(int64(1494023235), 0)
+	expectedTime := time.Unix(int64(1494023235), 0)
 	if !test.CreatedAt.Equal(expectedTime) {
 		t.Errorf("Expected time %s, actual %s", expectedTime.String(), test.CreatedAt)
 	}

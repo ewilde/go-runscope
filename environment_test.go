@@ -230,8 +230,7 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 		t.Errorf("Expected verify ssl %t, actual %t", true, environment.VerifySsl)
 	}
 
-	expectedTime := time.Time{}
-	expectedTime = time.Unix(int64(1494190571), 0)
+	expectedTime := time.Unix(int64(1494190571), 0)
 	if !environment.ExportedAt.Equal(expectedTime) {
 		t.Errorf("Expected exported at %s, actual %s", expectedTime.String(), environment.ExportedAt)
 	}
