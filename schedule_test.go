@@ -254,7 +254,7 @@ func TestListSchedules(t *testing.T) {
 		t.Errorf("Expected %d schedules, actual %d", 1, len(schedules))
 	}
 
-	if schedules[0].Interval != "1h" {
+	if schedules[0].Interval != "1.0h" {
 		t.Errorf("Expected schedule interval %s, actual %s", "Hourly schedule", schedules[0].Interval)
 	}
 }
