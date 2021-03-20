@@ -144,7 +144,9 @@ func (client *Client) createResource(
 	}
 
 	response := new(response)
-	json.Unmarshal(bodyBytes, &response)
+	if err := json.Unmarshal(bodyBytes, &response); err != nil {
+		return nil, err
+	}
 	return response, nil
 
 }
@@ -223,7 +225,10 @@ func (client *Client) updateResource(resource interface{}, resourceType string, 
 			resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 	}
 
-	json.Unmarshal(bodyBytes, &response)
+	if err := json.Unmarshal(bodyBytes, &response); err != nil {
+		return nil, err
+	}
+
 	return &response, nil
 }
 

@@ -10,7 +10,7 @@ func TestCreateSharedEnvironment(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key)
+	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
 
 	if err != nil {
 		t.Error(err)
@@ -100,14 +100,14 @@ func TestCreateTestEnvironment(t *testing.T) {
 		t.Error(err)
 	}
 
-	defer client.DeleteBucket(bucket.Key)
+	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
 
 	test, err := client.CreateTest(&Test{Name: "Environment Test", Description: "A test of a test", Bucket: bucket})
 	if err != nil {
 		t.Error(err)
 	}
 
-	defer client.DeleteTest(test)
+	defer client.DeleteTest(test) // nolint: errcheck
 	integrations, _ := client.ListIntegrations(teamID)
 	slack := choose(integrations, func(item *Integration) bool {
 		return item.IntegrationType == "slack"
@@ -263,7 +263,7 @@ func TestListSharedEnvironment(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key)
+	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
 
 	if err != nil {
 		t.Error(err)

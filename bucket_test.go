@@ -15,24 +15,28 @@ func TestCreateBucket(t *testing.T) {
 		t.Error(err)
 	}
 
-	client.DeleteBucket(bucket.Key)
+	if err := client.DeleteBucket(bucket.Key); err != nil {
+		t.Error(err)
+	}
 }
 func TestDeleteBuckets(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test-fred", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key)
+	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
 	if err != nil {
 		t.Error(err)
 	}
 
 	bucket2, err := client.CreateBucket(&Bucket{Name: "test-bob", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket2.Key)
+	defer client.DeleteBucket(bucket2.Key) // nolint: errcheck
 	if err != nil {
 		t.Error(err)
 	}
 
-	client.DeleteBuckets(func(bucket *Bucket) bool { return bucket.Name == "test-bob" })
+	if err := client.DeleteBuckets(func(bucket *Bucket) bool { return bucket.Name == "test-bob" }); err != nil {
+		t.Error(err)
+	}
 
 	fredBucket, err := client.ReadBucket(bucket.Key)
 
@@ -58,13 +62,13 @@ func TestListBuckets(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key)
+	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
 	if err != nil {
 		t.Error(err)
 	}
 
 	bucket2, err := client.CreateBucket(&Bucket{Name: "test2", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket2.Key)
+	defer client.DeleteBucket(bucket2.Key) // nolint: errcheck
 	if err != nil {
 		t.Error(err)
 	}
@@ -88,7 +92,7 @@ func TestListAllTests(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test-list-all-tests", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key)
+	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
 	if err != nil {
 		t.Error(err)
 	}
@@ -142,7 +146,9 @@ func TestReadBucket(t *testing.T) {
 			fmt.Sprintf("https://api.runscope.com/buckets/%s/tests", readBucket.Key), readBucket.TestsURL)
 	}
 
-	client.DeleteBucket(createdBucket.Key)
+	if err := client.DeleteBucket(createdBucket.Key); err != nil {
+		t.Error(err)
+	}
 }
 
 func TestBucketReadFromResponse(t *testing.T) {
