@@ -38,6 +38,7 @@ type ClientAPI interface {
 	ListSchedules(bucketKey string, testID string) ([]*Schedule, error)
 	ListIntegrations(teamID string) ([]*Integration, error)
 	ListPeople(teamID string) ([]*People, error)
+	ListAgents(teamID string) ([]*Agent, error)
 	ListSharedEnvironment(bucket *Bucket) ([]*Environment, error)
 	ListTestEnvironment(bucket *Bucket, test *Test) ([]*Environment, error)
 	ReadBucket(key string) (*Bucket, error)
@@ -57,6 +58,7 @@ type ClientAPI interface {
 	ReadTestLatestResult(testID string, bucketKey string) (*Result, error)
 	ReadTestStepResult(testRunID string, bucketKey string, testID string, testStepID string) (*Result, error)
 	ListRegions() (*Regions, error)
+	GetAccount() (*Account, error)
 }
 
 // Client provides access to create, read, update and delete runscope resources
