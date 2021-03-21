@@ -20,9 +20,9 @@ func (client *Client) ListRegions() (*Regions, error) {
 		return nil, err
 	}
 
-	readResources, error := getRegionsFromResponse(resource.Data)
-	if error != nil {
-		return nil, error
+	readResources, err := getRegionsFromResponse(resource.Data)
+	if err != nil {
+		return nil, err
 	}
 
 	return readResources, nil
