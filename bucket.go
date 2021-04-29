@@ -67,7 +67,9 @@ func (client *Client) CreateBucket(bucket *Bucket) (*Bucket, error) {
 	}
 
 	response := new(response)
-	json.Unmarshal(bodyBytes, &response)
+	if err := json.Unmarshal(bodyBytes, &response); err != nil {
+		return nil, err
+	}
 	return getBucketFromResponse(response.Data)
 }
 
@@ -97,7 +99,7 @@ func (client *Client) DeleteBuckets(predicate func(bucket *Bucket) bool) error {
 
 	for _, bucket := range buckets {
 		if predicate(bucket) {
-			client.DeleteBucket(bucket.Key)
+			client.DeleteBucket(bucket.Key) // nolint: errcheck
 		}
 	}
 

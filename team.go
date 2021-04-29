@@ -24,6 +24,12 @@ type People struct {
 	GroupName   string    `json:"group_name"`
 }
 
+type Agent struct {
+	Version string `json:"version"`
+	AgentID string `json:"agent_id"`
+	Name    string `json:"name"`
+}
+
 // ListIntegrations list all configured integrations for your team. See https://www.runscope.com/docs/api/integrations
 func (client *Client) ListIntegrations(teamID string) ([]*Integration, error) {
 	resource, error := client.readResource("integration", teamID,
@@ -56,6 +62,22 @@ func (client *Client) ListPeople(teamID string) ([]*People, error) {
 	return people, nil
 }
 
+// ListAgents list all the agents. See https://api.blazemeter.com/api-monitoring/#agents
+func (client *Client) ListAgents(teamID string) ([]*Agent, error) {
+	resource, error := client.readResource("agents", teamID,
+		fmt.Sprintf("/teams/%s/agents", teamID))
+	if error != nil {
+		return nil, error
+	}
+
+	agents, error := getAgentsFromResponse(resource.Data)
+	if error != nil {
+		return nil, error
+	}
+
+	return agents, nil
+}
+
 func choose(items []*Integration, test func(*Integration) bool) (result []*Integration) {
 	for _, item := range items {
 		if test(item) {
@@ -76,4 +98,10 @@ func getPeopleFromResponse(response interface{}) ([]*People, error) {
 	var people []*People
 	err := decode(&people, response)
 	return people, err
+}
+
+func getAgentsFromResponse(response interface{}) ([]*Agent, error) {
+	var agents []*Agent
+	err := decode(&agents, response)
+	return agents, err
 }

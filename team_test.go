@@ -33,3 +33,13 @@ func TestListIntegration(t *testing.T) {
 		t.Errorf("Expected UUID got %s", integrations[0].UUID)
 	}
 }
+
+func TestListAgents(t *testing.T) {
+	testPreCheck(t)
+	client := clientConfigure()
+	_, err := client.ListAgents(teamID)
+
+	if err != nil {
+		t.Error(err)
+	}
+}
