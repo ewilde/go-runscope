@@ -2,7 +2,6 @@ package runscope
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 	"strings"
 	"testing"
@@ -77,12 +76,8 @@ func deletePredicate(bucket *Bucket) bool {
 
 func TestMain(m *testing.M) {
 	client := clientConfigure()
-	if err := client.DeleteBuckets(deletePredicate); err != nil {
-		log.Fatalln(err)
-	}
+	client.DeleteBuckets(deletePredicate)
 	code := m.Run()
-	if err := client.DeleteBuckets(deletePredicate); err != nil {
-		log.Fatalln(err)
-	}
+	client.DeleteBuckets(deletePredicate)
 	os.Exit(code)
 }

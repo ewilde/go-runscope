@@ -10,7 +10,7 @@ func TestCreateSharedEnvironment(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -100,17 +100,21 @@ func TestCreateTestEnvironment(t *testing.T) {
 		t.Error(err)
 	}
 
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	test, err := client.CreateTest(&Test{Name: "Environment Test", Description: "A test of a test", Bucket: bucket})
 	if err != nil {
 		t.Error(err)
 	}
 
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 	integrations, _ := client.ListIntegrations(teamID)
 	slack := choose(integrations, func(item *Integration) bool {
-		return item.IntegrationType == "slack"
+		if item.IntegrationType == "slack" {
+			return true
+		}
+
+		return false
 	})
 	environment := &Environment{
 		Name: "tf_environment",
@@ -226,7 +230,8 @@ func TestReadEnvironmentFromResponse(t *testing.T) {
 		t.Errorf("Expected verify ssl %t, actual %t", true, environment.VerifySsl)
 	}
 
-	expectedTime := time.Unix(int64(1494190571), 0)
+	expectedTime := time.Time{}
+	expectedTime = time.Unix(int64(1494190571), 0)
 	if !environment.ExportedAt.Equal(expectedTime) {
 		t.Errorf("Expected exported at %s, actual %s", expectedTime.String(), environment.ExportedAt)
 	}
@@ -263,7 +268,7 @@ func TestListSharedEnvironment(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)

@@ -9,7 +9,7 @@ func TestCreateSchedule(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -17,7 +17,7 @@ func TestCreateSchedule(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -30,11 +30,7 @@ func TestCreateSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
-	if err != nil {
-		t.Error(err)
-	}
-
-	defer client.DeleteEnvironment(environment, bucket) // nolint: errcheck
+	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
 	schedule.Note = "Daily schedule"
@@ -42,7 +38,7 @@ func TestCreateSchedule(t *testing.T) {
 	schedule.EnvironmentID = environment.ID
 
 	schedule, err = client.CreateSchedule(schedule, bucket.Key, test.ID)
-	defer client.DeleteSchedule(schedule, bucket.Key, test.ID) // nolint: errcheck
+	defer client.DeleteSchedule(schedule, bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -56,7 +52,7 @@ func TestReadSchedule(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -64,7 +60,7 @@ func TestReadSchedule(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -77,11 +73,7 @@ func TestReadSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
-	if err != nil {
-		t.Error(err)
-	}
-
-	defer client.DeleteEnvironment(environment, bucket) // nolint: errcheck
+	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
 	schedule.Note = "Daily schedule"
@@ -89,7 +81,7 @@ func TestReadSchedule(t *testing.T) {
 	schedule.EnvironmentID = environment.ID
 
 	schedule, err = client.CreateSchedule(schedule, bucket.Key, test.ID)
-	defer client.DeleteSchedule(schedule, bucket.Key, test.ID) // nolint: errcheck
+	defer client.DeleteSchedule(schedule, bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -116,7 +108,7 @@ func TestUpdateSchedule(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -124,7 +116,7 @@ func TestUpdateSchedule(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -137,11 +129,7 @@ func TestUpdateSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
-	if err != nil {
-		t.Error(err)
-	}
-
-	defer client.DeleteEnvironment(environment, bucket) // nolint: errcheck
+	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
 	schedule.Note = "Daily schedule"
@@ -149,16 +137,13 @@ func TestUpdateSchedule(t *testing.T) {
 	schedule.EnvironmentID = environment.ID
 
 	schedule, err = client.CreateSchedule(schedule, bucket.Key, test.ID)
-	defer client.DeleteSchedule(schedule, bucket.Key, test.ID) // nolint: errcheck
+	defer client.DeleteSchedule(schedule, bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}
 
 	schedule.Note = "Updated note field"
 	_, err = client.UpdateSchedule(schedule, bucket.Key, test.ID)
-	if err != nil {
-		t.Error(err)
-	}
 
 	readSchedule, err := client.ReadSchedule(schedule, bucket.Key, test.ID)
 	if err != nil {
@@ -174,7 +159,7 @@ func TestDeleteSchedule(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -182,7 +167,7 @@ func TestDeleteSchedule(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -195,11 +180,7 @@ func TestDeleteSchedule(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
-	if err != nil {
-		t.Error(err)
-	}
-
-	defer client.DeleteEnvironment(environment, bucket) // nolint: errcheck
+	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
 	schedule.Note = "Daily schedule"
@@ -211,7 +192,7 @@ func TestDeleteSchedule(t *testing.T) {
 		t.Error(err)
 	}
 
-	err = client.DeleteSchedule(schedule, bucket.Key, test.ID)
+	client.DeleteSchedule(schedule, bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -221,8 +202,8 @@ func TestDeleteSchedule(t *testing.T) {
 		t.Error("Should not have found test schedule after deleting it")
 	}
 
-	if !strings.Contains(err.Error(), "404 Not Found") {
-		t.Errorf("Expected error to contain %s, actual %s", "404 Not Found", err.Error())
+	if !strings.Contains(err.Error(), "404 NOT FOUND") {
+		t.Errorf("Expected error to contain %s, actual %s", "404 NOT FOUND", err.Error())
 	}
 }
 
@@ -230,7 +211,7 @@ func TestListSchedules(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -238,7 +219,7 @@ func TestListSchedules(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -251,11 +232,7 @@ func TestListSchedules(t *testing.T) {
 		},
 	}
 	environment, err = client.CreateTestEnvironment(environment, test)
-	if err != nil {
-		t.Error(err)
-	}
-
-	defer client.DeleteEnvironment(environment, bucket) // nolint: errcheck
+	defer client.DeleteEnvironment(environment, bucket)
 
 	schedule := NewSchedule()
 	schedule.Note = "Hourly schedule"
@@ -263,7 +240,7 @@ func TestListSchedules(t *testing.T) {
 	schedule.EnvironmentID = environment.ID
 
 	schedule, err = client.CreateSchedule(schedule, bucket.Key, test.ID)
-	defer client.DeleteSchedule(schedule, bucket.Key, test.ID) // nolint: errcheck
+	defer client.DeleteSchedule(schedule, bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -277,7 +254,7 @@ func TestListSchedules(t *testing.T) {
 		t.Errorf("Expected %d schedules, actual %d", 1, len(schedules))
 	}
 
-	if schedules[0].Interval != "1.0h" {
+	if schedules[0].Interval != "1h" {
 		t.Errorf("Expected schedule interval %s, actual %s", "Hourly schedule", schedules[0].Interval)
 	}
 }

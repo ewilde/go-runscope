@@ -9,7 +9,7 @@ func TestCreateTestStep(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -17,7 +17,7 @@ func TestCreateTestStep(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -34,7 +34,7 @@ func TestCreateTestStep(t *testing.T) {
 	}}
 
 	step, err = client.CreateTestStep(step, bucket.Key, test.ID)
-	defer client.DeleteTestStep(step, bucket.Key, test.ID) // nolint: errcheck
+	defer client.DeleteTestStep(step, bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -42,10 +42,10 @@ func TestCreateTestStep(t *testing.T) {
 	if len(step.ID) == 0 {
 		t.Error("Test step id should not be empty")
 	}
-
+	
 	test2 := &Test{Name: "tf_test2", Description: "This is a tf test with a subtest step", Bucket: bucket}
 	test2, err = client.CreateTest(test2)
-	defer client.DeleteTest(test2) // nolint: errcheck
+	defer client.DeleteTest(test2)
 
 	if err != nil {
 		t.Error(err)
@@ -62,7 +62,7 @@ func TestCreateTestStep(t *testing.T) {
 	}}
 
 	step2, err = client.CreateTestStep(step2, bucket.Key, test2.ID)
-	defer client.DeleteTestStep(step2, bucket.Key, test2.ID) // nolint: errcheck
+	defer client.DeleteTestStep(step2, bucket.Key, test2.ID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -76,7 +76,7 @@ func TestReadTestStep(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -84,7 +84,7 @@ func TestReadTestStep(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -103,7 +103,7 @@ func TestReadTestStep(t *testing.T) {
 	}}
 
 	step, err = client.CreateTestStep(step, bucket.Key, test.ID)
-	defer client.DeleteTestStep(step, bucket.Key, test.ID) // nolint: errcheck
+	defer client.DeleteTestStep(step, bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -138,7 +138,7 @@ func TestUpdateTestStep(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -146,7 +146,7 @@ func TestUpdateTestStep(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -163,16 +163,13 @@ func TestUpdateTestStep(t *testing.T) {
 	}}
 
 	step, err = client.CreateTestStep(step, bucket.Key, test.ID)
-	defer client.DeleteTestStep(step, bucket.Key, test.ID) // nolint: errcheck
+	defer client.DeleteTestStep(step, bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}
 
 	step.Method = "POST"
 	_, err = client.UpdateTestStep(step, bucket.Key, test.ID)
-	if err != nil {
-		t.Error(err)
-	}
 
 	readStep, err := client.ReadTestStep(step, bucket.Key, test.ID)
 	if err != nil {
@@ -188,7 +185,7 @@ func TestDeleteTestStep(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -196,7 +193,7 @@ func TestDeleteTestStep(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -217,7 +214,7 @@ func TestDeleteTestStep(t *testing.T) {
 		t.Error(err)
 	}
 
-	err = client.DeleteTestStep(step, bucket.Key, test.ID)
+	client.DeleteTestStep(step, bucket.Key, test.ID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -227,8 +224,8 @@ func TestDeleteTestStep(t *testing.T) {
 		t.Error("Should not have found test step after deleting it")
 	}
 
-	if !strings.Contains(err.Error(), "404 Not Found") {
-		t.Errorf("Expected error to contain %s, actual %s", "404 Not Found", err.Error())
+	if !strings.Contains(err.Error(), "404 NOT FOUND") {
+		t.Errorf("Expected error to contain %s, actual %s", "404 NOT FOUND", err.Error())
 	}
 }
 

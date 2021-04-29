@@ -8,11 +8,10 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/hashicorp/go-cleanhttp"
 	"io/ioutil"
 	"strings"
 	"sync"
-
-	"github.com/hashicorp/go-cleanhttp"
 )
 
 // APIURL is the default runscope api uri
@@ -38,7 +37,6 @@ type ClientAPI interface {
 	ListSchedules(bucketKey string, testID string) ([]*Schedule, error)
 	ListIntegrations(teamID string) ([]*Integration, error)
 	ListPeople(teamID string) ([]*People, error)
-	ListAgents(teamID string) ([]*Agent, error)
 	ListSharedEnvironment(bucket *Bucket) ([]*Environment, error)
 	ListTestEnvironment(bucket *Bucket, test *Test) ([]*Environment, error)
 	ReadBucket(key string) (*Bucket, error)
@@ -53,12 +51,6 @@ type ClientAPI interface {
 	UpdateTest(test *Test) (*Test, error)
 	UpdateTestEnvironment(environment *Environment, test *Test) (*Environment, error)
 	UpdateTestStep(testStep *TestStep, bucketKey string, testID string) (*TestStep, error)
-	ListResults(bucketKey string, testID string) ([]*Result, error)
-	ReadTestResult(testRunID string, bucketKey string, testID string) (*Result, error)
-	ReadTestLatestResult(testID string, bucketKey string) (*Result, error)
-	ReadTestStepResult(testRunID string, bucketKey string, testID string, testStepID string) (*Result, error)
-	ListRegions() (*Regions, error)
-	GetAccount() (*Account, error)
 }
 
 // Client provides access to create, read, update and delete runscope resources
@@ -147,9 +139,7 @@ func (client *Client) createResource(
 	}
 
 	response := new(response)
-	if err := json.Unmarshal(bodyBytes, &response); err != nil {
-		return nil, err
-	}
+	json.Unmarshal(bodyBytes, &response)
 	return response, nil
 
 }
@@ -228,10 +218,7 @@ func (client *Client) updateResource(resource interface{}, resourceType string, 
 			resp.Status, resourceType, resourceName, errorResp.ErrorMessage)
 	}
 
-	if err := json.Unmarshal(bodyBytes, &response); err != nil {
-		return nil, err
-	}
-
+	json.Unmarshal(bodyBytes, &response)
 	return &response, nil
 }
 
@@ -269,7 +256,9 @@ func (client *Client) deleteResource(resourceType string, resourceName string, e
 }
 
 func (client *Client) newFormURLEncodedRequest(method string, endpoint string, data url.Values) (*http.Request, error) {
-	urlStr := client.APIURL + endpoint
+
+	var urlStr string
+	urlStr = client.APIURL + endpoint
 	url, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, fmt.Errorf("Error during parsing request URL: %s", err)
@@ -288,7 +277,9 @@ func (client *Client) newFormURLEncodedRequest(method string, endpoint string, d
 }
 
 func (client *Client) newRequest(method string, endpoint string, body []byte) (*http.Request, error) {
-	urlStr := client.APIURL + endpoint
+
+	var urlStr string
+	urlStr = client.APIURL + endpoint
 	url, err := url.Parse(urlStr)
 	if err != nil {
 		return nil, fmt.Errorf("Error during parsing request URL: %s", err)
