@@ -11,7 +11,7 @@ func TestCreateTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -19,7 +19,7 @@ func TestCreateTest(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -38,7 +38,7 @@ func TestReadTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -46,7 +46,7 @@ func TestReadTest(t *testing.T) {
 
 	newTest := &Test{Name: "tf_test", Description: "This is a tf newTest", Bucket: bucket}
 	newTest, err = client.CreateTest(newTest)
-	defer client.DeleteTest(newTest) // nolint: errcheck
+	defer client.DeleteTest(newTest)
 
 	if err != nil {
 		t.Error(err)
@@ -70,7 +70,7 @@ func TestReadTestMetrics(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -78,7 +78,7 @@ func TestReadTestMetrics(t *testing.T) {
 
 	newTest := &Test{Name: "tf_test", Description: "This is a tf newTest", Bucket: bucket}
 	newTest, err = client.CreateTest(newTest)
-	defer client.DeleteTest(newTest) // nolint: errcheck
+	defer client.DeleteTest(newTest)
 
 	if err != nil {
 		t.Error(err)
@@ -106,7 +106,7 @@ func TestUpdateTest(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -114,7 +114,7 @@ func TestUpdateTest(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -135,7 +135,7 @@ func TestUpdateTestUsingPartiallyFilledOutObject(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -143,7 +143,7 @@ func TestUpdateTestUsingPartiallyFilledOutObject(t *testing.T) {
 
 	test := &Test{Name: "tf_test", Description: "This is a tf test", Bucket: bucket}
 	test, err = client.CreateTest(test)
-	defer client.DeleteTest(test) // nolint: errcheck
+	defer client.DeleteTest(test)
 
 	if err != nil {
 		t.Error(err)
@@ -309,7 +309,8 @@ func TestReadFromResponse(t *testing.T) {
 		t.Errorf("Expected name %s, actual %s", "Sample Name", test.Name)
 	}
 
-	expectedTime := time.Unix(int64(1494023235), 0)
+	expectedTime := time.Time{}
+	expectedTime = time.Unix(int64(1494023235), 0)
 	if !test.CreatedAt.Equal(expectedTime) {
 		t.Errorf("Expected time %s, actual %s", expectedTime.String(), test.CreatedAt)
 	}
@@ -445,7 +446,7 @@ func TestListsTests(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -453,15 +454,11 @@ func TestListsTests(t *testing.T) {
 
 	newTest := &Test{Name: "tf_test1", Description: "This is a tf newTest", Bucket: bucket}
 	newTest, err = client.CreateTest(newTest)
-	if err != nil {
-		t.Error(err)
-	}
-
-	defer client.DeleteTest(newTest) // nolint: errcheck
+	defer client.DeleteTest(newTest)
 
 	newTest = &Test{Name: "tf_test2", Description: "This is a tf newTest", Bucket: bucket}
 	newTest, err = client.CreateTest(newTest)
-	defer client.DeleteTest(newTest) // nolint: errcheck
+	defer client.DeleteTest(newTest)
 
 	if err != nil {
 		t.Error(err)
@@ -485,7 +482,7 @@ func TestListsTestsMoreThan10(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "newTest", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer client.DeleteBucket(bucket.Key)
 
 	if err != nil {
 		t.Error(err)
@@ -496,7 +493,7 @@ func TestListsTestsMoreThan10(t *testing.T) {
 		newTest, err = client.CreateTest(newTest)
 
 		//noinspection ALL
-		defer client.DeleteTest(&Test{Bucket: newTest.Bucket, ID: newTest.ID}) // nolint: errcheck
+		defer client.DeleteTest(&Test{Bucket: newTest.Bucket, ID: newTest.ID})
 	}
 
 	if err != nil {
