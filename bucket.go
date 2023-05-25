@@ -80,6 +80,10 @@ func (client *Client) ReadBucket(key string) (*Bucket, error) {
 		return nil, err
 	}
 
+	if resource == nil {
+		return nil, nil
+	}
+
 	bucket, err := getBucketFromResponse(resource.Data)
 	return bucket, err
 }

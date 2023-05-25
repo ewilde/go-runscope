@@ -168,14 +168,16 @@ func (client *Client) readResource(resourceType string, resourceName string, end
 	}
 	defer resp.Body.Close()
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return response, err
 	}
 	bodyString := string(bodyBytes)
 	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
-	if resp.StatusCode >= 300 {
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, nil
+	} else if resp.StatusCode >= 300 {
 		errorResp := new(errorResponse)
 		if err = json.Unmarshal(bodyBytes, &errorResp); err != nil {
 			return response, fmt.Errorf("Status: %s Error reading %s: %s",
