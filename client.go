@@ -5,11 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"io/ioutil"
-	"strings"
 	"sync"
 
 	"github.com/hashicorp/go-cleanhttp"
@@ -213,7 +211,7 @@ func (client *Client) updateResource(resource interface{}, resourceType string, 
 	}
 	defer resp.Body.Close()
 
-	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	bodyBytes, _ := io.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
 	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
@@ -251,7 +249,7 @@ func (client *Client) deleteResource(resourceType string, resourceName string, e
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 300 {
-		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		bodyBytes, _ := io.ReadAll(resp.Body)
 		bodyString := string(bodyBytes)
 		DebugF(2, "%s", bodyString)
 
@@ -266,25 +264,6 @@ func (client *Client) deleteResource(resourceType string, resourceName string, e
 	}
 
 	return nil
-}
-
-func (client *Client) newFormURLEncodedRequest(method string, endpoint string, data url.Values) (*http.Request, error) {
-	urlStr := client.APIURL + endpoint
-	url, err := url.Parse(urlStr)
-	if err != nil {
-		return nil, fmt.Errorf("Error during parsing request URL: %s", err)
-	}
-
-	req, err := http.NewRequest(method, url.String(), strings.NewReader(data.Encode()))
-	if err != nil {
-		return nil, fmt.Errorf("Error during creation of request: %s", err)
-	}
-
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.AccessToken))
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	return req, nil
 }
 
 func (client *Client) newRequest(method string, endpoint string, body []byte) (*http.Request, error) {
