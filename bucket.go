@@ -1,13 +1,12 @@
 /*
-Package runscope implements a client library for the runscope api (https://www.runscope.com/docs/api)
-
+Package runscope implements a client library for the runscope api (https://api.blazemeter.com/api-monitoring/)
 */
 package runscope
 
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/url"
 )
 
@@ -16,7 +15,8 @@ const (
 	DefaultPageSize = 10
 )
 
-// Bucket resources are a simple way to organize your requests and tests. See https://www.runscope.com/docs/api/buckets and https://www.runscope.com/docs/buckets
+// Bucket resources are a simple way to organize your requests and tests.
+// See https://api.blazemeter.com/api-monitoring/#buckets and https://www.runscope.com/docs/buckets
 type Bucket struct {
 	Name           string `json:"name,omitempty"`
 	Key            string `json:"key,omitempty"`
@@ -30,16 +30,16 @@ type Bucket struct {
 	Team           *Team  `json:"team,omitempty"`
 }
 
-// CreateBucket creates a new bucket resource. See https://www.runscope.com/docs/api/buckets#bucket-create
+// CreateBucket creates a new bucket resource. See https://api.blazemeter.com/api-monitoring/#creating-a-bucket
 func (client *Client) CreateBucket(bucket *Bucket) (*Bucket, error) {
 	DebugF(1, "creating bucket %s", bucket.Name)
-	data := url.Values{}
-	data.Add("name", bucket.Name)
-	data.Add("team_uuid", bucket.Team.ID)
 
-	DebugF(2, "	request: POST %s %#v", "/buckets", data)
+	endpoint := fmt.Sprintf("/buckets?name=%s&team_uuid=%s",
+		url.QueryEscape(bucket.Name), url.QueryEscape(bucket.Team.ID))
 
-	req, err := client.newFormURLEncodedRequest("POST", "/buckets", data)
+	DebugF(2, "	request: POST %s", endpoint)
+
+	req, err := client.newRequest("POST", endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (client *Client) CreateBucket(bucket *Bucket) (*Bucket, error) {
 	}
 	defer resp.Body.Close()
 
-	bodyBytes, _ := ioutil.ReadAll(resp.Body)
+	bodyBytes, _ := io.ReadAll(resp.Body)
 	bodyString := string(bodyBytes)
 	DebugF(2, "	response: %d %s", resp.StatusCode, bodyString)
 
