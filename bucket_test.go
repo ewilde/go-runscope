@@ -9,13 +9,9 @@ import (
 func TestCreateBucket(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
-	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-
+	bucket, err := client.CreateBucket(&Bucket{Name: "test123", Team: &Team{ID: teamID}})
+	defer deleteBucket(client, bucket)
 	if err != nil {
-		t.Error(err)
-	}
-
-	if err := client.DeleteBucket(bucket.Key); err != nil {
 		t.Error(err)
 	}
 }
@@ -23,15 +19,17 @@ func TestDeleteBuckets(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test-fred", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer deleteBucket(client, bucket)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	bucket2, err := client.CreateBucket(&Bucket{Name: "test-bob", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket2.Key) // nolint: errcheck
+	defer deleteBucket(client, bucket2)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	if err := client.DeleteBuckets(func(bucket *Bucket) bool { return bucket.Name == "test-bob" }); err != nil {
@@ -62,21 +60,23 @@ func TestListBuckets(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer deleteBucket(client, bucket)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	bucket2, err := client.CreateBucket(&Bucket{Name: "test2", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket2.Key) // nolint: errcheck
+	defer deleteBucket(client, bucket2)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	results, err := client.ListBuckets()
-
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	if results == nil {
@@ -92,7 +92,7 @@ func TestListAllTests(t *testing.T) {
 	testPreCheck(t)
 	client := clientConfigure()
 	bucket, err := client.CreateBucket(&Bucket{Name: "test-list-all-tests", Team: &Team{ID: teamID}})
-	defer client.DeleteBucket(bucket.Key) // nolint: errcheck
+	defer deleteBucket(client, bucket)
 	if err != nil {
 		t.Error(err)
 	}
@@ -192,5 +192,11 @@ func TestBucketReadFromResponse(t *testing.T) {
 
 	if len(bucket.TestsURL) == 0 {
 		t.Error("Missing test url")
+	}
+}
+
+func deleteBucket(client *Client, bucket *Bucket) {
+	if bucket != nil {
+		_ = client.DeleteBucket(bucket.Key)
 	}
 }
